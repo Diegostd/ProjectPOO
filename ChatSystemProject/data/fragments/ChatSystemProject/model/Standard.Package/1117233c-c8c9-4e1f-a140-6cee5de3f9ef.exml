@@ -17,6 +17,7 @@
         <COMPID name="Interaction" mc="Standard.Interaction" uid="6339aecc-a35b-4053-998b-b82fb1e04564"/>
         <COMPID name="Interaction1" mc="Standard.Interaction" uid="c8a28337-dab0-402c-acfe-acfdacca93ac"/>
         <COMPID name="Interaction2" mc="Standard.Interaction" uid="75a10883-b0ea-44eb-875f-a1573f46d7b1"/>
+        <COMPID name="Interaction3" mc="Standard.Interaction" uid="1b1e15e2-27a4-4882-bfa2-d797ec26e3fe"/>
       </COMP>
       <COMP relation="OwnedElement">
         <COMPID name="User" mc="Standard.Actor" uid="0a91e2d8-1c53-4336-a564-c27062f5d46b"/>
@@ -39,10 +40,26 @@
         <COMPID name="Send_msg" mc="Standard.UseCase" uid="06640892-8f3b-4947-b68f-823a9e51a167"/>
         <COMPID name="receive_msg" mc="Standard.UseCase" uid="d948f10e-972d-4f20-a648-37711ede32f1"/>
         <COMPID name="notify_all_users" mc="Standard.UseCase" uid="e7371a8f-6318-49aa-8d8d-44573c0d863c"/>
-        <COMPID name="notify_all_users_ofdisconnection" mc="Standard.UseCase" uid="df308165-7c11-4f08-8bf0-ceac338c9ea4"/>
+        <COMPID name="notify_all_users_of disconnection" mc="Standard.UseCase" uid="df308165-7c11-4f08-8bf0-ceac338c9ea4"/>
+        <COMPID name="Main" mc="Standard.Class" uid="b4c91cc7-e3ae-43fc-abb6-822be4342a7a"/>
+        <COMPID name="Clock" mc="Standard.Class" uid="e11b663b-2e62-4c8d-ba79-04712200053b"/>
+        <COMPID name="DatabaseServer" mc="Standard.Class" uid="5acbf94a-4a35-41dd-bfb4-aae5ab818741"/>
+        <COMPID name="Controller" mc="Standard.Class" uid="592b8fa2-1642-49c7-8b87-181ac46a704b"/>
+        <COMPID name="CommunicatingSystem" mc="Standard.Class" uid="c025f98a-7643-4b92-9763-10e413f519db"/>
+        <COMPID name="Interface" mc="Standard.Class" uid="6e2d902a-d8e0-48a2-9f6b-efb40a82f455"/>
+        <COMPID name="User" mc="Standard.Class" uid="17fbbd0d-0323-47b8-ab94-f9c95d92a0aa"/>
+        <COMPID name="Message" mc="Standard.Class" uid="4d30d5d8-9ee9-4612-8f7f-925e010d8a7f"/>
+        <COMPID name="Window Chat" mc="Standard.Class" uid="463b3cdf-ef4c-4c74-9d03-578a0af5d67e"/>
+        <COMPID name="DisplayAvailableFunctions" mc="Standard.DataType" uid="513251fb-b264-4ccc-86dc-6a7a0638e6a5"/>
+        <COMPID name="Signal" mc="Standard.Class" uid="98c9c6e0-8758-4b16-be9e-10f94a062429"/>
+        <COMPID name="Request-msg Signal" mc="Standard.Class" uid="78f5c64f-5296-44fe-b428-e695aaa3873a"/>
+        <COMPID name="System Response Signal" mc="Standard.Class" uid="d279e24c-0d52-4394-8ab3-631138d5a93d"/>
+        <COMPID name="External Signal" mc="Standard.Class" uid="440b9689-1628-4d34-8213-64ab61cb60f7"/>
       </COMP>
       <COMP relation="Product">
         <COMPID name="Diagramme de cas d'utilisation chatsystemproject" mc="Standard.UseCaseDiagram" uid="70c5fe02-09f7-42d9-8bd3-31d474748e27"/>
+        <COMPID name="chatsystemproject Class diagram" mc="Standard.ClassDiagram" uid="977f4cd5-63e6-4b3d-8922-aa8d0ee14adf"/>
+        <COMPID name="chatsystemproject Class diagram modifications" mc="Standard.ClassDiagram" uid="8cab87e1-1f45-4b70-a51c-c1ffbbb123e4"/>
       </COMP>
     </DEPENDENCIES>
   </OBJECT>

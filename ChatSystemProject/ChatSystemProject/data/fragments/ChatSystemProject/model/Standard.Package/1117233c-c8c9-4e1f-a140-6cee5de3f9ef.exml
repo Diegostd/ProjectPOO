@@ -52,13 +52,14 @@
         <COMPID name="Window Chat" mc="Standard.Class" uid="463b3cdf-ef4c-4c74-9d03-578a0af5d67e"/>
         <COMPID name="DisplayAvailableFunctions" mc="Standard.DataType" uid="513251fb-b264-4ccc-86dc-6a7a0638e6a5"/>
         <COMPID name="Signal" mc="Standard.Class" uid="98c9c6e0-8758-4b16-be9e-10f94a062429"/>
-        <COMPID name="Request Signal" mc="Standard.Class" uid="78f5c64f-5296-44fe-b428-e695aaa3873a"/>
+        <COMPID name="Request-msg Signal" mc="Standard.Class" uid="78f5c64f-5296-44fe-b428-e695aaa3873a"/>
         <COMPID name="System Response Signal" mc="Standard.Class" uid="d279e24c-0d52-4394-8ab3-631138d5a93d"/>
         <COMPID name="External Signal" mc="Standard.Class" uid="440b9689-1628-4d34-8213-64ab61cb60f7"/>
       </COMP>
       <COMP relation="Product">
         <COMPID name="Diagramme de cas d'utilisation chatsystemproject" mc="Standard.UseCaseDiagram" uid="70c5fe02-09f7-42d9-8bd3-31d474748e27"/>
         <COMPID name="chatsystemproject Class diagram" mc="Standard.ClassDiagram" uid="977f4cd5-63e6-4b3d-8922-aa8d0ee14adf"/>
+        <COMPID name="chatsystemproject Class diagram modifications" mc="Standard.ClassDiagram" uid="8cab87e1-1f45-4b70-a51c-c1ffbbb123e4"/>
       </COMP>
     </DEPENDENCIES>
   </OBJECT>

@@ -1,5 +1,3 @@
-#Wed Nov 10 10:58:36 CET 2021
-org.modelio.app.diagram.editor.OpenedDiagrams3='Diagramme de s\u00E9quence - choosePseudo(bo\u00EEte blanche)' {953857c2-e21d-42fd-8495-c683c3230438} Standard.SequenceDiagram
-org.modelio.app.diagram.editor.OpenedDiagrams2='Diagramme de s\u00E9quence - changePseudo' {72852706-7554-48e9-a7fd-34a6505a2b99} Standard.SequenceDiagram
-org.modelio.app.diagram.editor.OpenedDiagrams1='Diagramme de s\u00E9quence - choosePseudo(bo\u00EEte noire)' {395ddcac-9faa-4979-af5a-865457907b50} Standard.SequenceDiagram
-org.modelio.app.diagram.editor.OpenedDiagrams0='Diagramme de cas d'utilisation chatsystemproject' {70c5fe02-09f7-42d9-8bd3-31d474748e27} Standard.UseCaseDiagram
+#Mon Nov 29 17:55:23 CET 2021
+org.modelio.app.diagram.editor.OpenedDiagrams1='chatsystemproject Class diagram modifications' {8cab87e1-1f45-4b70-a51c-c1ffbbb123e4} Standard.ClassDiagram
+org.modelio.app.diagram.editor.OpenedDiagrams0='chatsystemproject Class diagram' {977f4cd5-63e6-4b3d-8922-aa8d0ee14adf} Standard.ClassDiagram

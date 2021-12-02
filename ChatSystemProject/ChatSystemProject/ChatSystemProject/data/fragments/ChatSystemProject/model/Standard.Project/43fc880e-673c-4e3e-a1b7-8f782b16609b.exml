@@ -1,0 +1,20 @@
+<?xml version="1.0" ?>
+<!--GENERATED FILE, PLEASE DO NOT EDIT!!!--><EXT object="ChatSystemProject" version="4">
+  <OBJECT>
+    <ID name="ChatSystemProject" mc="Standard.Project" uid="43fc880e-673c-4e3e-a1b7-8f782b16609b"/>
+    <ATTRIBUTES>
+      <ATT name="ProjectContext"></ATT>
+      <ATT name="ProjectDescr"></ATT>
+      <ATT name="Name"><![CDATA[ChatSystemProject]]></ATT>
+      <ATT name="status">1970354901745664</ATT>
+    </ATTRIBUTES>
+    <DEPENDENCIES>
+      <COMP relation="Model">
+        <COMPID name="chatsystemproject" mc="Standard.Package" uid="1117233c-c8c9-4e1f-a140-6cee5de3f9ef"/>
+      </COMP>
+      <COMP relation="DiagramRoot">
+        <COMPID name="ChatSystemProject" mc="Infrastructure.DiagramSet" uid="3bb6a5a0-ee7e-4175-a740-39049e283e30"/>
+      </COMP>
+    </DEPENDENCIES>
+  </OBJECT>
+</EXT>
