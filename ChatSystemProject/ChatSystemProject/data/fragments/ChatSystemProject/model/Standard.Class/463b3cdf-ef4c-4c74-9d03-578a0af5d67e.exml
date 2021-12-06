@@ -85,7 +85,7 @@
           </DEPENDENCIES>
         </OBJECT>
         <OBJECT>
-          <ID name="SenderID" mc="Standard.Attribute" uid="6e66c81b-7025-4540-b5f2-6a4fd662cbcc"/>
+          <ID name="LocalAgentID" mc="Standard.Attribute" uid="6e66c81b-7025-4540-b5f2-6a4fd662cbcc"/>
           <ATTRIBUTES>
             <ATT name="TypeConstraint"></ATT>
             <ATT name="Value"></ATT>
@@ -99,7 +99,7 @@
             <ATT name="Visibility">Public</ATT>
             <ATT name="IsClass">false</ATT>
             <ATT name="IsAbstract">false</ATT>
-            <ATT name="Name"><![CDATA[SenderID]]></ATT>
+            <ATT name="Name"><![CDATA[LocalAgentID]]></ATT>
             <ATT name="status">1970354901745664</ATT>
           </ATTRIBUTES>
           <DEPENDENCIES>
@@ -109,7 +109,7 @@
           </DEPENDENCIES>
         </OBJECT>
         <OBJECT>
-          <ID name="ReceiverID" mc="Standard.Attribute" uid="0e67aa1b-c704-4c46-a43c-b2180025de63"/>
+          <ID name="InterlocutorAgentID" mc="Standard.Attribute" uid="0e67aa1b-c704-4c46-a43c-b2180025de63"/>
           <ATTRIBUTES>
             <ATT name="TypeConstraint"></ATT>
             <ATT name="Value"></ATT>
@@ -123,7 +123,7 @@
             <ATT name="Visibility">Public</ATT>
             <ATT name="IsClass">false</ATT>
             <ATT name="IsAbstract">false</ATT>
-            <ATT name="Name"><![CDATA[ReceiverID]]></ATT>
+            <ATT name="Name"><![CDATA[InterlocutorAgentID]]></ATT>
             <ATT name="status">1970354901745664</ATT>
           </ATTRIBUTES>
           <DEPENDENCIES>
