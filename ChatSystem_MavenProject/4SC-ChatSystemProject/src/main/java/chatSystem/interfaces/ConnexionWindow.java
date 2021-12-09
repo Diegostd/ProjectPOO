@@ -16,6 +16,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import chatSystem.controller.NetworkController;
+import chatSystem.controller.NetworkController2;
+import chatSystem.controller.UDPReceiver;
 
 public class ConnexionWindow extends JFrame {
 
@@ -23,6 +25,8 @@ public class ConnexionWindow extends JFrame {
 	private JTextField textPseudo;
 	private JTextField textMotDePasse;
 	private NetworkController ntcon;
+	private NetworkController2 udpSender;
+	private UDPReceiver udpReceiver;
 	JFrame frame = new JFrame();
 	
 
@@ -110,11 +114,15 @@ public class ConnexionWindow extends JFrame {
 				String pseudoOk=textPseudo.getText();
 				ntcon = new NetworkController();
 				if(ntcon.testPseudo(pseudoOk)== true) {
+					//Close current window and open mainwindow
 					System.out.println("ok");
-					//mettre ici le code pour ouvrir la main window
 					dispose();
-					//trouver comment afficher mainwindow 
-					new MainWindow();
+					udpSender.sendPseudosBroadcast(pseudoOk);
+					udpReceiver.ReceiveMessage();
+					udpReceiver.setStopThread(true);
+					udpSender.closeSocket();
+					udpReceiver.closeSocket();
+					new MainWindow2();
 				}
 				else {
 					System.out.println("pas ok");

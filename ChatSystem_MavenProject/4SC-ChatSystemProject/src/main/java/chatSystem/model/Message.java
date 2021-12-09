@@ -30,7 +30,6 @@ public class Message implements Serializable{
 	    }
 
 	    public User getTransmitter() {
-	        return transmitter;
+	        return sender;
 	    }
 	}
-}

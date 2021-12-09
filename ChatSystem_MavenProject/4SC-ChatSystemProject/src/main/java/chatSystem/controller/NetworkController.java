@@ -10,6 +10,8 @@ public class NetworkController {
 		  this.preuve="toto";
 		  this.motdepassepreuve= "toto";
 		  }
+	  
+	  
 	public boolean testPseudo (String pseudo){
 		if (pseudo.equals(preuve)&&pseudo.equals(motdepassepreuve)) {
 			return true;
