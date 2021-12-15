@@ -4,8 +4,62 @@ import java.awt.* ;
 import javax.swing.*; 
 
 
-
 public class ConnexionWindow extends JFrame {
+
+JPanel connexionPanel;
+
+public ConnexionWindow(int height, int width) {
+
+		// GUI creation
+JLabel pseudoLabel = new JLabel("Pseudo");
+        JTextField pseudoField = new JTextField();
+        JButton button = new JButton();
+        button.setText("Connexion");
+       
+        Container pane = getContentPane();
+        GroupLayout gl = new GroupLayout(pane);
+        pane.setLayout(gl);
+
+        gl.setAutoCreateContainerGaps(true);
+        gl.setAutoCreateGaps(true);
+
+        //GroupLayout works with the horizontal and vertical layouts separately.
+        //The layout is defined for each dimension independently.
+        //We have to define both of them
+        gl.setHorizontalGroup(gl.createParallelGroup(GroupLayout.Alignment.CENTER)
+                .addComponent(pseudoLabel)
+                .addComponent(pseudoField)
+                .addComponent(button)
+        );
+
+       
+        gl.setVerticalGroup(gl.createSequentialGroup()
+                .addComponent(pseudoLabel)
+                .addComponent(pseudoField, GroupLayout.DEFAULT_SIZE,
+                        GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                .addComponent(button, GroupLayout.DEFAULT_SIZE,
+                        GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+        );
+       
+        setTitle("ChatSystem - Login");
+        setSize(height, width);
+        setLocationRelativeTo(null);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+       
+        setVisible(true);
+} 
+
+public static void main(String[] Args) {
+
+ConnexionWindow windowTest = new ConnexionWindow(300, 200);
+
+}
+
+}
+
+
+
+/*public class ConnexionWindow extends JFrame {
 	
 	JPanel connexionPanel; 
 	
@@ -53,5 +107,5 @@ public static void main (String[] Args) {
 	
 }
 
-}
+}*/ 
  
