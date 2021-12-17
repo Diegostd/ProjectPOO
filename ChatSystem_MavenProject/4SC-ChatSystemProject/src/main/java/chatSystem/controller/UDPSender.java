@@ -10,13 +10,13 @@ import java.net.UnknownHostException;
 
 import chatSystem.interfaces.*;
 
-public class NetworkController2 {
-	private DatagramSocket socket;
+public class UDPSender {
+	private DatagramSocket socketSender;
 
 
-	public NetworkController2(){
+	public UDPSender(){
 		try {
-			this.socket = new DatagramSocket();
+			this.socketSender = new DatagramSocket();
 		} catch (SocketException e) {
 			System.err.println("Socket couldn't be created.");
 			e.printStackTrace();
@@ -40,9 +40,9 @@ public class NetworkController2 {
 		DatagramPacket Messagetosend = new DatagramPacket(buf, buf.length, iptosend, port);
 
 		try {
-			this.socket.send(Messagetosend);
+			this.socketSender.send(Messagetosend);
 		} catch (IOException e) {
-			System.err.println("pseudosage failed to send");
+			System.err.println("message failed to send");
 			e.printStackTrace();
 		}
 	}
@@ -67,7 +67,7 @@ public class NetworkController2 {
 			InetAddress iptosend = InetAddress.getByName("255.255.255.255");
 			DatagramPacket PseudoToSend = new DatagramPacket(buffer, buffer.length, iptosend, port);
 
-			this.socket.send(PseudoToSend);
+			this.socketSender.send(PseudoToSend);
 		}catch (SocketException e){
 			System.err.println("java.net.SocketException: [UDPS]Socket closed");
 		}catch (UnknownHostException e1) {
@@ -80,10 +80,11 @@ public class NetworkController2 {
 	}
 
 	public void closeSocket(){
-		if (!this.socket.isClosed()){
-			this.socket.close();
+		if (!this.socketSender.isClosed()){
+			this.socketSender.close();
 		}
-	}
+	}	
+	
 
 }
 

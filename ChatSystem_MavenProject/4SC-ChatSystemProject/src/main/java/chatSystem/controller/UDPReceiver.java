@@ -13,7 +13,7 @@ import javax.swing.event.EventListenerList;
 
 
 public class UDPReceiver{
-	private DatagramSocket socket;
+	private DatagramSocket socketForReceive;
 	private EventListenerList listeners;
 	private Boolean stopThread;
 
@@ -22,7 +22,7 @@ public class UDPReceiver{
 		this.stopThread = false;
 		listeners = new EventListenerList();
 		try {
-			this.socket = new DatagramSocket(1234);
+			this.socketForReceive = new DatagramSocket(5000);
 		} catch (SocketException e) {
 			e.printStackTrace();
 		}
@@ -37,12 +37,12 @@ public class UDPReceiver{
 			// receive a message
 			DatagramPacket packet = new DatagramPacket(buf, buf.length);
 			try {
-				socket.receive(packet);
+				socketForReceive.receive(packet);
 				// unpackage to a message
 				ByteArrayInputStream bais = new ByteArrayInputStream(packet.getData());
 				try {
 					ObjectInputStream ois = new ObjectInputStream(bais);
-					message = (String) ois.readObject() ;
+					message = (String) ois.readObject();
 					System.out.println(message);
 				}
 				
@@ -79,9 +79,26 @@ public class UDPReceiver{
 	}
 
 	public void closeSocket(){
-		if (!this.socket.isClosed()){
-			this.socket.close();
+		if (!this.socketForReceive.isClosed()){
+			this.socketForReceive.close();
 		}
 	}
+	
+	//here we check the unicity of the pseudo of the users 
+	/*public void CheckUnicity(String newPseudo) {
+		if (UsersList.contains(newPseudo)) {
+			
+		}
+	}*/
+
+	public EventListenerList getListeners() {
+		return listeners;
+	}
+
+	public void setListeners(EventListenerList listeners) {
+		this.listeners = listeners;
+	}
+	
+	
 
 }
