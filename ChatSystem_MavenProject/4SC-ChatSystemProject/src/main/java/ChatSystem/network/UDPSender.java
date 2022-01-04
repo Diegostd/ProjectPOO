@@ -61,6 +61,40 @@ public class UDPSender {
 		}
 	}
 	
+	
+	//method that send a pseudo in udpbroadcast 
+	public void sendPseudosBroadcast(String pseudo){
+		int port = 5000;
+		byte[] buffer = new byte[2048];
+
+		// Here we create the packet to send
+		ByteArrayOutputStream Baos = new ByteArrayOutputStream();
+		try {
+			ObjectOutputStream Oos = new ObjectOutputStream(Baos);
+			Oos.writeObject(pseudo);
+			Oos.close();
+			buffer=Baos.toByteArray();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+
+		// Here we send the packet on broadcast
+		try {
+			InetAddress iptosend = InetAddress.getByName("255.255.255.255");
+			DatagramPacket PseudoToSend = new DatagramPacket(buffer, buffer.length, iptosend, port);
+
+			this.socket.send(PseudoToSend);
+		}catch (SocketException e){
+			System.err.println("java.net.SocketException: [UDPS]Socket closed");
+		}catch (UnknownHostException e1) {
+			System.err.println("UnknownHostException for broadcast 255.255.255.255");
+			e1.printStackTrace();
+		} catch (IOException e) {
+			System.err.println("Message failed to send");
+			e.printStackTrace();
+		}
+	}
+	
 	public void sendCheck(int type, InetAddress iptosend, String usernameSrc, String usernameDest){
 		MsgCheck mes=null;
 		switch(type){
@@ -77,6 +111,7 @@ public class UDPSender {
 		}
 		this.sendMess(mes, iptosend);
 	}
+	
 	
 	/*
 	 * Send Hello in Broadcast
@@ -206,6 +241,7 @@ public class UDPSender {
 		return this.lastMessage;
 	}
 	
+	@SuppressWarnings("deprecation")
 	protected void finalize() throws Throwable
     { 
 		try{
@@ -218,3 +254,5 @@ public class UDPSender {
     }
 
 }
+
+//pour tster faire un main deux fois ou tester depuis 2 postes  
