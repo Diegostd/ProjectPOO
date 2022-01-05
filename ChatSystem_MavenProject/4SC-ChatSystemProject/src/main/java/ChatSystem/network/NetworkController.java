@@ -46,11 +46,7 @@ public class NetworkController {
 		udpReceiver.closeSocket(); 
 		
 		
-		 // Création et lancement du timer
-		
-
-		
-		
+		 // Création et lancement du timer	
 		
 	 
 	  }
@@ -58,7 +54,10 @@ public class NetworkController {
 		
 		
 		//sinon on affiche un msg d'erreur sur la fenêtre de connexion 
+	
+	
+	//On suppose que le pseudo est unique, il faudra créer la liste des utilisateurs connectés et initier un échange dde msg tcp entre deux users et gérer l'historique  
+	
 	}
 	
 	
-}
