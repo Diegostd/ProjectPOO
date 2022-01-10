@@ -50,8 +50,7 @@ public class MysqlCon {
 			
 			
 			while(rs1.next()) { 
-				System.out.println("senderID: " + rs1.getString(1)+" receiverID: "+rs1.getString(2)+"msgContent : "+rs1.getString(3)+"timeStamp "+rs1.getString(4));  
-			
+				System.out.println("senderID: " + rs1.getString(1)+" receiverID: "+rs1.getString(2)+"msgContent : "+rs1.getString(3)+"timeStamp "+rs1.getString(4));  		
 			}
 			
 			con.close(); 
@@ -62,7 +61,6 @@ public class MysqlCon {
 			//appel agent --> init (exécution) --> appel des méthodes de la bdd 
 		//créer une table à 3 id : id emetteur, id recepteur, contenu du msg , optionnellement time stamp (utile pour la gestion de l'historique) --> voir comment ça se fait depuis java 
 		
-	
 	} 
 	
 }
