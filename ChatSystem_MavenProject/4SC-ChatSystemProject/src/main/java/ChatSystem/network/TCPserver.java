@@ -4,6 +4,7 @@ import java.io.*;
 import java.net.*;
 
 //multi-threaded  version 
+//à décliner pour un échange 
 public class TCPserver {
 
 	public TCPserver() {
@@ -33,3 +34,6 @@ public class TCPserver {
 		
 	}
 }
+
+//constructeur + création socket 
+//à partir de la liste des utilisateurs, récupérer son adresse IP 

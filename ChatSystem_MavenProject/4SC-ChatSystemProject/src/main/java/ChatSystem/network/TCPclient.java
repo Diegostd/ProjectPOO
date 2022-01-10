@@ -33,6 +33,8 @@ public class TCPclient {
                 text = reader.readLine(); 
  
                 writer.println(text); //envoi de la donnée 
+                
+                //******enregistrement del'échange dans la base de données centrale 
  
                 InputStream input = socket.getInputStream();
 	            BufferedReader reader1 = new BufferedReader(new InputStreamReader(input)); //définition d'un nouveau buffer d'écoute sur le flux entrant
@@ -40,8 +42,7 @@ public class TCPclient {
  
                 System.out.println(time);
                 
-                
-                //enregistrement del'échange dans la base de données centrale 
+            
                 
                 
                 
