@@ -7,7 +7,7 @@ import java.net.*;
 
 /* This thread is responsible to handle client connection.*/
 public class ServerThread extends Thread {
-
+     
 	
 	 private Socket socket;
 	 
@@ -32,6 +32,7 @@ public class ServerThread extends Thread {
 	                String viewText = new StringBuilder(text).reverse().toString();
 	                writer.println("Server: " + viewText);
 	                //enregistrement du message envoyé dans la bdd; 
+	                //il faudra les bons identifiants
 	 
 	            } while (!text.equals("bye"));
 	 

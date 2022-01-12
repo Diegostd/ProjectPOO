@@ -3,8 +3,9 @@ package chatSystem.model;
 public class LocalUser {
 
 	String pseudo; 
-	String mdp ;
+	String ID ; //@mail par exemple
 	String IP; //c'est mon @IP 
+	int port; 
 
 	
 	public String getPseudo() {
@@ -14,11 +15,11 @@ public class LocalUser {
 		this.pseudo = pseudo;
 	}
 	
-	public String getMdp() {
-		return mdp;
+	public String getID() {
+		return ID;
 	}
-	public void setMdp(String mdp) {
-		this.mdp = mdp;
+	public void setID(String id) {
+		this.ID = id;
 	} 
 	
 	
