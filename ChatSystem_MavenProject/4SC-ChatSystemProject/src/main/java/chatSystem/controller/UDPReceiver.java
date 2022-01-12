@@ -19,7 +19,7 @@ public class UDPReceiver{
 
 
 	public UDPReceiver() {
-		this.stopThread = false;
+		
 		listeners = new EventListenerList();
 		try {
 			this.socketForReceive = new DatagramSocket(5000);

@@ -11,6 +11,7 @@ public class Main {
 
 			//controlGUI controlgui = new controlGUI();
 			ConnexionWindow frame = new ConnexionWindow();
+			frame.setVisible(true);
 			
 
 	}

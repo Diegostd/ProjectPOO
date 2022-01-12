@@ -31,7 +31,7 @@ public class MainWindow extends JFrame {
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
+	/*public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -42,7 +42,7 @@ public class MainWindow extends JFrame {
 				}
 			}
 		});
-	}
+	}*/
 
 	/**
 	 * Create the frame.
@@ -83,6 +83,7 @@ public class MainWindow extends JFrame {
 		JButton btnChangePseudo_1 = new JButton("Disconnect");
 		btnChangePseudo_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				dispose();
 			}
 		});
 		btnChangePseudo_1.setBounds(26, 531, 154, 25);
@@ -133,6 +134,5 @@ public class MainWindow extends JFrame {
 		JScrollBar scrollBar = new JScrollBar();
 		scrollBar.setBounds(638, 163, 17, 61);
 		contentPane.add(scrollBar);
-		setVisible(true);
 	}
 }

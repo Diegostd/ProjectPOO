@@ -51,7 +51,7 @@ public class ConnexionWindow extends JFrame {
 	 */
 	public ConnexionWindow() {
 		//JFrame frame = new JFrame();
-		JFrame frame = new JFrame();
+		//JFrame frame = new JFrame();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -118,14 +118,18 @@ public class ConnexionWindow extends JFrame {
 				if(ntcon.testPseudo(pseudoOk)== true) {
 					//Close current window and open mainwindow
 					System.out.println("ok");
-					dispose();
+					ntcon.NewUserBroadcast(pseudoOk);
 					//only to check the sended string System.out.println(pseudoOk);
-					udpSender.sendPseudosBroadcast(pseudoOk);
+					/*udpSender.sendPseudosBroadcast(pseudoOk);
 					udpReceiver.ReceiveMessage();
 					udpReceiver.setStopThread(true);
 					udpSender.closeSocket();
-					udpReceiver.closeSocket();
-					new MainWindow();
+					udpReceiver.closeSocket();*/
+					
+					dispose();
+					MainWindow mw = new MainWindow();
+					mw.setVisible(true);
+					
 				}
 				else {
 					System.out.println("pas ok");
@@ -138,7 +142,6 @@ public class ConnexionWindow extends JFrame {
 		gbc_btnLogin.gridx = 1;
 		gbc_btnLogin.gridy = 4;
 		contentPane.add(btnLogin, gbc_btnLogin);
-		setVisible(true);
 	}
 
 }

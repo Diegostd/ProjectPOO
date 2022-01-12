@@ -5,14 +5,13 @@ import java.net.InetAddress;
 
 import javax.swing.Timer;
 
-import contact.State;
 
 
 public class User{
 	private String username;
 	private InetAddress ip;
 	private State userState;
-//	private Timer timer;
+	private Timer timer;
 
 
 	public User(String username, InetAddress ip, ActionListener action) {
@@ -22,7 +21,7 @@ public class User{
 		//this.timer=new Timer(3000,action);
 	}
 
-	/*public void startTimer(){
+	public void startTimer(){
 		this.timer.start();
 	}
 
@@ -32,7 +31,7 @@ public class User{
 
 	public void stopTimer(){
 		this.timer.stop();
-	}*/
+	}
 
 	@Override
 	public String toString()
