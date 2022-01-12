@@ -14,6 +14,7 @@ import javax.swing.JTextField;
 import javax.swing.JButton;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.net.UnknownHostException;
 
 import chatSystem.controller.NetworkController;
 import chatSystem.controller.UDPSender;
@@ -118,7 +119,12 @@ public class ConnexionWindow extends JFrame {
 				if(ntcon.testPseudo(pseudoOk)== true) {
 					//Close current window and open mainwindow
 					System.out.println("ok");
-					ntcon.NewUserBroadcast(pseudoOk);
+					try {
+						ntcon.NewUserBroadcast(pseudoOk);
+					} catch (UnknownHostException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 					//only to check the sended string System.out.println(pseudoOk);
 					/*udpSender.sendPseudosBroadcast(pseudoOk);
 					udpReceiver.ReceiveMessage();
