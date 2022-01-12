@@ -47,7 +47,7 @@ public class UDPSender {
 		}
 	}
 
-	public void sendPseudosBroadcast(String pseudo){
+	public void sendMessageBroadcast(String msgToSend){
 		int port = 5000;
 		byte[] buffer = new byte[2048];
 
@@ -55,7 +55,7 @@ public class UDPSender {
 		ByteArrayOutputStream Baos = new ByteArrayOutputStream();
 		try {
 			ObjectOutputStream Oos = new ObjectOutputStream(Baos);
-			Oos.writeObject(pseudo);
+			Oos.writeObject(msgToSend);
 			Oos.close();
 			buffer=Baos.toByteArray();
 		} catch (IOException e1) {
@@ -65,9 +65,9 @@ public class UDPSender {
 		// Here we send the packet on broadcast
 		try {
 			InetAddress iptosend = InetAddress.getByName("255.255.255.255");
-			DatagramPacket PseudoToSend = new DatagramPacket(buffer, buffer.length, iptosend, port);
+			DatagramPacket MSGToSend = new DatagramPacket(buffer, buffer.length, iptosend, port);
 
-			this.socketSender.send(PseudoToSend);
+			this.socketSender.send(MSGToSend);
 		}catch (SocketException e){
 			System.err.println("java.net.SocketException: [UDPS]Socket closed");
 		}catch (UnknownHostException e1) {
@@ -83,7 +83,13 @@ public class UDPSender {
 		if (!this.socketSender.isClosed()){
 			this.socketSender.close();
 		}
-	}	
+	}
+	
+	protected void finalize(){
+		if (!this.socketSender.isClosed()){
+			this.socketSender.close();
+		}
+	}
 	
 
 }
