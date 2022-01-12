@@ -1,10 +1,12 @@
 package chatSystem.model;
+import java.awt.event.ActionListener;
+import java.net.InetAddress; 
 
 public class LocalUser {
 
 	String pseudo; 
 	String ID ; //@mail par exemple
-	String IP; //c'est mon @IP 
+	private InetAddress IP; //c'est mon @IP 
 	int port; 
 
 	

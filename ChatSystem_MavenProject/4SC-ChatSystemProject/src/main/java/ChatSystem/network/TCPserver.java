@@ -3,10 +3,14 @@ package ChatSystem.network;
 import java.io.*;
 import java.net.*;
 
+import chatSystem.model.LocalUser;
+
 //multi-threaded  version 
 //à décliner pour un échange 
 public class TCPserver {
 
+	private LocalUser clientAgent = new LocalUser();
+	
 	public TCPserver() {
 		// TODO Auto-generated constructor stub
 	}
