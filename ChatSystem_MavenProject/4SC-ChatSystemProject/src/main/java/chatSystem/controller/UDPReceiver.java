@@ -12,30 +12,37 @@ import javax.swing.event.EventListenerList;
 
 
 
-public class UDPReceiver{
+public class UDPReceiver implements Runnable{
 	private DatagramSocket socketForReceive;
 	private EventListenerList listeners;
 	private Boolean stopThread;
+	public static InetAddress addressSrc;
+	public static InetAddress addressSrc1;
 
 
 	public UDPReceiver() {
-		
+		this.stopThread = false;
 		listeners = new EventListenerList();
 		try {
-			this.socketForReceive = new DatagramSocket(5000);
+			this.socketForReceive = new DatagramSocket(5005);
 		} catch (SocketException e) {
 			e.printStackTrace();
 		}
 
 	}
-
-	public void ReceiveMessage() {
+	
+	
+	public void run(){
 		byte[] buf = new byte[2048];
 		String message = null;
 
 		while(!this.stopThread){
 			// receive a message
 			DatagramPacket packet = new DatagramPacket(buf, buf.length);
+			InetAddress addressSrc = packet.getAddress();
+		//	String hostIP = addressSrc.getHostAddress() ;
+			
+		
 			try {
 				socketForReceive.receive(packet);
 				// unpackage to a message
@@ -43,7 +50,9 @@ public class UDPReceiver{
 				try {
 					ObjectInputStream ois = new ObjectInputStream(bais);
 					message = (String) ois.readObject();
-					System.out.println(message);
+					System.out.println(message+"si esta parte");
+					System.out.println(addressSrc.toString()+ "la ip en teoria");
+					
 				}
 				
 				catch (ClassNotFoundException e) {
@@ -61,7 +70,10 @@ public class UDPReceiver{
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+			
 		}
+		
+		
 	}
 	
 	/*public MessageListener[] getListeners() {

@@ -14,6 +14,7 @@ public class UDPSender {
 	private DatagramSocket socketSender;
 
 
+
 	public UDPSender(){
 		try {
 			this.socketSender = new DatagramSocket();
@@ -48,7 +49,7 @@ public class UDPSender {
 	}
 
 	public void sendMessageBroadcast(String msgToSend){
-		int port = 5000;
+		int port = 5005;
 		byte[] buffer = new byte[2048];
 
 		// Here we create the packet to send

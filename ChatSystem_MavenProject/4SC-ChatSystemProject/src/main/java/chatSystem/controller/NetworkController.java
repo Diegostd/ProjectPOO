@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 import chatSystem.interfaces.*;
 import chatSystem.model.*;
@@ -13,11 +14,18 @@ public class NetworkController {
 	  private String motdepassepreuve;
 	  private UDPSender udpSender;
 	  private UDPReceiver udpReceiver;
+	  private Thread udprThread;
 	  private Model model;
+	  private NetworkController nc;
 
 	  public NetworkController() {
 		  this.preuve="toto";
 		  this.motdepassepreuve= "toto";
+		  
+		  this.udpReceiver = new UDPReceiver();
+		  //this.udps = new UDPSender();
+		  this.udprThread = new Thread(this.udpReceiver);
+		  this.udprThread.start();
 		  }
 	  
 	  
@@ -34,17 +42,23 @@ public class NetworkController {
 	
 	/* when user connect, he must send a NewUserBroadcast*/
 	//@Test
-	public void NewUserBroadcast(String newPseudo) {
+	public void NewUserBroadcast(String newPseudo) throws UnknownHostException {
 		// analyze the package that the controller sent
 		udpSender = new UDPSender();
-		udpReceiver = new UDPReceiver();
-		
 		udpSender.sendMessageBroadcast(newPseudo);
-		udpReceiver.ReceiveMessage();
+		//udpReceiver.ReceiveMessage();
+		//InetAddress ipSrc = InetAddress.getByAddress(bytes);
+		InetAddress adrSrc = UDPReceiver.addressSrc;
+		System.out.println("[cNet212] "+ newPseudo + " say hello to me");
+		//String srcIP = adrSrc.toString()
+		//System.out.println("[cNet212] "+ srcIP + " IP");
+		nc.receivedFirstMsgHello(adrSrc, newPseudo);
+		
+		
 		udpReceiver.setStopThread(true);
-		//udpSender.setStopThread(true);
 		udpSender.closeSocket();
 		udpReceiver.closeSocket();
+		
 		
 		
 	}
@@ -55,6 +69,7 @@ public class NetworkController {
 		// default respond Hello not OK
 		
 		System.out.println("[cNet] "+ message + " say hello to me");
+		System.out.println("[cNet] "+ ipsrc + " IP");
 		
 		if (!usernameLocal.equals(message)){
 			// if remote username is not the same pseudo in comparaison to mine

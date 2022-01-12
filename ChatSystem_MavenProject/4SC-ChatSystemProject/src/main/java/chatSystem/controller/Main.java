@@ -1,17 +1,22 @@
 package chatSystem.controller;
 
+import java.net.UnknownHostException;
+
 import chatSystem.interfaces.ConnexionWindow;
 
 public class Main {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws UnknownHostException {
 		// TODO Auto-generated method stub
 
 			@SuppressWarnings("unused")
 
 			//controlGUI controlgui = new controlGUI();
-			ConnexionWindow frame = new ConnexionWindow();
-			frame.setVisible(true);
+			NetworkController nc = new NetworkController();
+			nc.NewUserBroadcast("titi");
+			
+			//ConnexionWindow frame = new ConnexionWindow();
+		//	frame.setVisible(true);
 			
 
 	}
