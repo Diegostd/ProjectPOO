@@ -21,7 +21,7 @@ import javax.swing.JPasswordField;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 
-public class MainWidow extends JFrame {
+public class MainWindow extends JFrame {
 
 	private JPanel contentPane;
 	private final JSeparator separator = new JSeparator();
@@ -35,7 +35,7 @@ public class MainWidow extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					MainWidow frame = new MainWidow();
+					MainWindow frame = new MainWindow();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -47,7 +47,7 @@ public class MainWidow extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public MainWidow() {
+	public MainWindow() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 681, 625);
 		contentPane = new JPanel();

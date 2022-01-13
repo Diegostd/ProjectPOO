@@ -5,10 +5,47 @@ import java.sql.*;
 
 public class MysqlCon {
 
-	/*public MysqlCon() {
+	//utile pour utiliser les méthodes de la classe en instanciant un objert 
+	public MysqlCon() {
 		// TODO Auto-generated constructor stub
-	}*/
-   
+	}
+    
+	
+	public static java.sql.Connection connectBDD() {
+		
+		java.sql.Connection con = null; 
+		try {
+		Class.forName("com.mysql.cj.jdbc.Driver");  
+		con =DriverManager.getConnection(  
+	    "jdbc:mysql://srv-bdens:3306/tp_servlet_012","tp_servlet_012","Thi0zaes"); 
+		}		
+		catch(Exception e){ System.out.println(e);}
+		return con;			
+	}
+		
+		
+	public void addHistoryLine(java.sql.Connection con,String senderID, String receiverID, String msgContent, String timeStamp) {
+		String query1 = "insert into history (senderID, receiverID, msgContent, timeStamp) "+"values (?,?,?,?)"; 		
+		PreparedStatement preparedStmt;
+		try {
+			preparedStmt = con.prepareStatement(query1);
+			preparedStmt.setString (1,senderID); 
+			preparedStmt.setString (2,receiverID); 
+			preparedStmt.setString (3,msgContent); 
+			preparedStmt.setString (4,timeStamp); 
+			preparedStmt.execute(); 
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 		
+	}
+			
+	public void disconnectBDD(java.sql.Connection con) {
+		try {
+			con.close(); 
+		}
+		catch(Exception e){ System.out.println(e);}
+	}
 	
 	public static void main(String[] args) {
 			
@@ -35,6 +72,7 @@ public class MysqlCon {
 			PreparedStatement preparedStmt0 = con.prepareStatement(query0);
 			preparedStmt0.execute();*/
 			String query1 = "insert into history (senderID, receiverID, msgContent, timeStamp) "+"values (?,?,?,?)"; 
+			//primary key was defined from the terminal by : senderID, receiverID, timeStamp
 			
 			
 			
@@ -43,7 +81,7 @@ public class MysqlCon {
 			preparedStmt.setString (1,"Loulou"); 
 			preparedStmt.setString (2,"Lola"); 
 			preparedStmt.setString (3,"Coucou !"); 
-			preparedStmt.setString (4,"18h:24-10/12/2022"); 
+			preparedStmt.setString (4,"18h:24-mar 12"); 
 			preparedStmt.execute(); //execution du prepared statement 
 			
 			Statement stmt1 = con.createStatement(); 
@@ -51,7 +89,7 @@ public class MysqlCon {
 			
 			
 			while(rs1.next()) { 
-				System.out.println("senderID: " + rs1.getString(1)+" receiverID: "+rs1.getString(2)+"msgContent : "+rs1.getString(3)+"timeStamp "+rs1.getString(4));  		
+				System.out.println("senderID: " + rs1.getString(1)+" receiverID: "+rs1.getString(2)+" msgContent: "+rs1.getString(3)+" timeStamp: "+rs1.getString(4));  		
 			}
 			
 			con.close(); 

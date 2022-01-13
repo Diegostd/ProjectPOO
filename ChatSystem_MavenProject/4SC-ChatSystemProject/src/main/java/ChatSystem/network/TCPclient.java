@@ -1,12 +1,19 @@
 package ChatSystem.network;
-import java.net.*;
-import java.sql.Timestamp;
+
+import chatSystem.database.*;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.net.Socket;
+import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
-import java.util.Date; 
+import java.util.Date;
 
 import chatSystem.model.LocalUser;
-
-import java.io.*;
 
 /**
  * This program demonstrates a simple TCP/IP socket client that reads input
@@ -14,11 +21,18 @@ import java.io.*;
 
 public class TCPclient {
 	
-	private LocalUser serverAgent = new LocalUser(); 
-	//créer une méthode dans LocaLuser après pour faire le send 
+	//this serverAgent was selected in the connected userlist (method to be implemented) --> that's how we will have acces to the receiver ID
+	
+	/*private LocalUser serverAgent = new LocalUser(); 
+	private LocalUser me = new LocalUser(); 
+	String senderID = me.getID(); 
+	String receiverID = serverAgent.getID(); */
+	
+	
+	//the client is sending a msg --> we can have access locally to 
 	//récupérer le contenu du msg 
 	
-	String msgContent; //(et horodatage --> clé primaire : IDsender, IDreceiver, et horodatage ) 
+	String msgContent; //(et horodatage --> clé primaire : pk_history : IDsender, IDreceiver, et horodatage ) 
 	static Date date; 
 	String msgDate; 
 	static SimpleDateFormat sdf ; 
@@ -27,8 +41,8 @@ public class TCPclient {
 	public static void main(String[] args) { 
         if (args.length < 2) return;
  
-        String hostname = args[0];
-        int port = Integer.parseInt(args[1]);
+        String hostname = args[0]; //hostname
+        int port = Integer.parseInt(args[1]); //numéro de port 
  
         try (Socket socket = new Socket(hostname, port)) {
       	
@@ -43,16 +57,25 @@ public class TCPclient {
                 System.out.println("Enter text: ");
                 text = reader.readLine(); 
                 
-                date = new Date();
-                sdf = new SimpleDateFormat("MM/dd/yyyy h:mm:ss a");
-                String formattedDate = sdf.format(date);
-                System.out.println(formattedDate); 
-                
-                
+               
  
                 writer.println(text); //envoi de la donnée 
+                //***time stamp
+                date = new Date();
+                sdf = new SimpleDateFormat("dd h:mm:ss a");
+                String formattedDate = sdf.format(date);
+                System.out.println("Enregistrement dans la BDD" +formattedDate);  
                 
-                //******enregistrement del'échange dans la base de données centrale              
+                //***enregistrement de l'échange dans la base de données centrale                             
+                
+                java.sql.Connection con = MysqlCon.connectBDD(); 
+                MysqlCon mysqlObj = new MysqlCon(); 
+                mysqlObj.addHistoryLine(con, "me" ,"you", text, formattedDate);
+                //sender et receiver sont à définir 
+                
+                mysqlObj.disconnectBDD(con);
+                
+                
                 InputStream input = socket.getInputStream();
 	            BufferedReader reader1 = new BufferedReader(new InputStreamReader(input)); //définition d'un nouveau buffer d'écoute sur le flux entrant
                 String time = reader1.readLine();
@@ -76,7 +99,8 @@ public class TCPclient {
 	
 	
 	}
-	
+
+
 	
 	
 	

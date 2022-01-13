@@ -6,7 +6,9 @@ import java.net.*;
 import chatSystem.model.LocalUser;
 
 //multi-threaded  version 
-//à décliner pour un échange 
+//à décliner pour un échange entre 2 agents sur des postes différents
+//contient un constructeur et une méthode receive 
+
 public class TCPserver {
 
 	private LocalUser clientAgent = new LocalUser();
