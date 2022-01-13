@@ -12,6 +12,9 @@ public class Model {
 	private DefaultListModel<ModelUserList> userList;
 	private Path localLog;
 	
+	
+	//We create the user model, using the user class
+	//We also declare a new list where users are saved
 	public Model(User userLocal) {
 		this.userLocal = userLocal;
 		this.userList = new DefaultListModel<ModelUserList>();
@@ -43,6 +46,8 @@ public class Model {
 		System.out.println("[Model]List of remoteUsers:"+this.userList.toString());
 	}
 
+	
+	
 	public void removeUserRemote(User userRemote){
 		User userTmp = null;
 		System.out.println("[Model]remove userRemote Ip:"+userRemote.getIp());
@@ -57,6 +62,8 @@ public class Model {
 		System.out.println("[Model]List of remoteUsers:"+this.userList.toString());
 	}
 
+	
+	
 	public User getUserRemoteByName(String username){
 		User userRemote = null;
 		User userTmp = null;
@@ -70,6 +77,8 @@ public class Model {
 		return userRemote;
 	}
 
+	
+	
 	public User getUserRemoteByIP(InetAddress hostaddress){
 		User userRemote = null;
 		User userTmp = null;
@@ -83,7 +92,9 @@ public class Model {
 		return userRemote;
 	}
 	
-	public ModelUserList getModelContactRemoteByName(String username){
+	
+	
+	public ModelUserList getModelUserRemoteByName(String username){
 		ModelUserList userRemote = null;
 		ModelUserList userTmp = null;
 		for(int i=0;i<this.userList.size();i++){

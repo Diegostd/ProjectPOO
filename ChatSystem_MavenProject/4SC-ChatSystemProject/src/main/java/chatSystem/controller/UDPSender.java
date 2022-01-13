@@ -24,7 +24,7 @@ public class UDPSender {
 		}
 	}
 
-	//Create the part of the message that we will send, not yet created completely
+	//Create the part of the message that we will send
 	public void sendMessage(String message, InetAddress iptosend){
 		int port = 1234;
 		byte[] buf = new byte[2048];

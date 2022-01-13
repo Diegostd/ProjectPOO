@@ -18,6 +18,7 @@ public class Main {
 			//controlGUI controlgui = new controlGUI();
 			NetworkController nc = new NetworkController();
 			nc.NewUserBroadcast("titi");
+			nc.NewUserBroadcast("toto");
 			
 			//ConnexionWindow frame = new ConnexionWindow();
 		//	frame.setVisible(true);

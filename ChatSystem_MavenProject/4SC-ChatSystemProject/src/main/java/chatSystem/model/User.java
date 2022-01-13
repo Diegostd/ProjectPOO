@@ -17,6 +17,7 @@ public class User{
 	public User(String username, InetAddress ip, ActionListener action) {
 		this.username = username;
 		this.ip = ip;
+		//The states and the timer are not not fully implemented yet
 		//this.userState=State.DISCONNECTED;
 		//this.timer=new Timer(3000,action);
 	}

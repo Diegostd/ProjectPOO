@@ -12,7 +12,7 @@ import javax.swing.event.EventListenerList;
 
 
 
-public class UDPReceiver {
+public class UDPReceiver implements Runnable {
 	private DatagramSocket socketForReceive;
 	private EventListenerList listeners;
 	private Boolean stopThread;
@@ -30,15 +30,15 @@ public class UDPReceiver {
 
 	}
 	
-	
-	public void ReceiveMessage() {
+	//thread
+	public void run() {
 		byte[] buf = new byte[2048];
 		String message = null;
 
 		while(!this.stopThread){
-			// receive a message
+			// to receive a message
 			DatagramPacket packet = new DatagramPacket(buf, buf.length);
-		//	String hostIP = addressSrc.getHostAddress() ;
+			//String hostIP = addressSrc.getHostAddress() ;
 			
 		
 			try {
@@ -49,9 +49,15 @@ public class UDPReceiver {
 				try {
 					ObjectInputStream ois = new ObjectInputStream(bais);
 					message = (String) ois.readObject();
-					System.out.println(message+" si esta parte");
-					System.out.println(addressSrc.toString()+ "  la ip en teoria");
 					
+					//We print in the console the pseudo and the IP of the user 
+					//who sent the message, where the pseudo is the message
+					System.out.println(message+" [UDPReceiver] pseudo part");
+					System.out.println(addressSrc.toString()+ "  [UDPReceiver] Ip ");
+					
+					
+					//I did this line of code because I thought that the thread did 
+					//not allow to do the other things, apparently it is not that.
 					stopThread=true;
 					
 				}
@@ -87,6 +93,9 @@ public class UDPReceiver {
 		}
 	}*/
 	
+	//Fonction to obtain the AdressIp
+	//Before this, I also tried to get the address by declaring 
+	//it as public static, but it didn't work either
 	public InetAddress getAddressIp() {
 	     return this.addressSrc;
 	  }
@@ -101,13 +110,15 @@ public class UDPReceiver {
 		}
 	}
 	
-	//here we check the unicity of the pseudo of the users 
 	/*public void CheckUnicity(String newPseudo) {
 		if (UsersList.contains(newPseudo)) {
 			
 		}
 	}*/
-
+	
+	
+	
+	//Fonctions under construction
 	public EventListenerList getListeners() {
 		return listeners;
 	}
