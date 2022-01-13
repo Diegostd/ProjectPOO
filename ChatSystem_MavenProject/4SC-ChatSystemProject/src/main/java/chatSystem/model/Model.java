@@ -3,7 +3,7 @@ package chatSystem.model;
 import java.net.InetAddress;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-
+import chatSystem.model.*;
 import javax.swing.DefaultListModel;
 
 public class Model {
@@ -16,7 +16,7 @@ public class Model {
 		this.userLocal = userLocal;
 		this.userList = new DefaultListModel<ModelUserList>();
 		//this.userLocal.setState(State.DISCONNECTED);
-		this.localLog = Paths.get(this.userLocal.getUsername()+"Log.txt");
+		//this.localLog = Paths.get(this.userLocal.getUsername()+"Log.txt");
 		//this.cleanLog();
 	}
 	

@@ -17,7 +17,7 @@ public class User{
 	public User(String username, InetAddress ip, ActionListener action) {
 		this.username = username;
 		this.ip = ip;
-		this.userState=State.DISCONNECTED;
+		//this.userState=State.DISCONNECTED;
 		//this.timer=new Timer(3000,action);
 	}
 
@@ -53,6 +53,14 @@ public class User{
 
 	public void setIp(InetAddress ip) {
 		this.ip = ip;
+	}
+	
+	public State getState() {
+		return this.userState;
+	}
+
+	public void setState(State state) {
+		this.userState = state;
 	}
 
 

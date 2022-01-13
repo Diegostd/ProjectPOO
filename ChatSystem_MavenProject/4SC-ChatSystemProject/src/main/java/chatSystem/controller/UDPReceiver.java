@@ -12,12 +12,11 @@ import javax.swing.event.EventListenerList;
 
 
 
-public class UDPReceiver implements Runnable{
+public class UDPReceiver {
 	private DatagramSocket socketForReceive;
 	private EventListenerList listeners;
 	private Boolean stopThread;
-	public static InetAddress addressSrc;
-	public static InetAddress addressSrc1;
+	private InetAddress addressSrc;
 
 
 	public UDPReceiver() {
@@ -32,26 +31,28 @@ public class UDPReceiver implements Runnable{
 	}
 	
 	
-	public void run(){
+	public void ReceiveMessage() {
 		byte[] buf = new byte[2048];
 		String message = null;
 
 		while(!this.stopThread){
 			// receive a message
 			DatagramPacket packet = new DatagramPacket(buf, buf.length);
-			InetAddress addressSrc = packet.getAddress();
 		//	String hostIP = addressSrc.getHostAddress() ;
 			
 		
 			try {
 				socketForReceive.receive(packet);
 				// unpackage to a message
+				addressSrc = packet.getAddress();
 				ByteArrayInputStream bais = new ByteArrayInputStream(packet.getData());
 				try {
 					ObjectInputStream ois = new ObjectInputStream(bais);
 					message = (String) ois.readObject();
-					System.out.println(message+"si esta parte");
-					System.out.println(addressSrc.toString()+ "la ip en teoria");
+					System.out.println(message+" si esta parte");
+					System.out.println(addressSrc.toString()+ "  la ip en teoria");
+					
+					stopThread=true;
 					
 				}
 				
@@ -85,6 +86,10 @@ public class UDPReceiver implements Runnable{
 			listener.aMessageHasBeenReceived(ipsrc, message);
 		}
 	}*/
+	
+	public InetAddress getAddressIp() {
+	     return this.addressSrc;
+	  }
 
 	public void setStopThread(Boolean stop){
 		this.stopThread = stop;

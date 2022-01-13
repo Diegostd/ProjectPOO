@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.Timer;
 
 import chatSystem.interfaces.*;
 import chatSystem.model.*;
@@ -14,18 +15,36 @@ public class NetworkController {
 	  private String motdepassepreuve;
 	  private UDPSender udpSender;
 	  private UDPReceiver udpReceiver;
-	  private Thread udprThread;
+	 // private Thread udprThread;
 	  private Model model;
 	  private NetworkController nc;
+	  //private ConnexionWindow interf;
+	  private Timer timerCheck;
+	  
 
 	  public NetworkController() {
 		  this.preuve="toto";
 		  this.motdepassepreuve= "toto";
+		  User userLocal = null;
 		  
 		  this.udpReceiver = new UDPReceiver();
 		  //this.udps = new UDPSender();
-		  this.udprThread = new Thread(this.udpReceiver);
-		  this.udprThread.start();
+		  //this.udprThread = new Thread(this.udpReceiver);
+		  //this.udprThread.start();
+
+			try {
+				userLocal = new User("titi", InetAddress.getLocalHost(), new ActionListener()
+				{
+					public void actionPerformed(ActionEvent e)
+					{
+						timerUserLocalHasExpired();
+					}
+				});
+			} catch (UnknownHostException e1) {
+				e1.printStackTrace();
+			}
+			this.model = new Model(userLocal);
+			//this.cNet = new ControllerNetwork(model, interf);
 		  }
 	  
 	  
@@ -46,30 +65,33 @@ public class NetworkController {
 		// analyze the package that the controller sent
 		udpSender = new UDPSender();
 		udpSender.sendMessageBroadcast(newPseudo);
-		//udpReceiver.ReceiveMessage();
+		udpReceiver.ReceiveMessage();
 		//InetAddress ipSrc = InetAddress.getByAddress(bytes);
-		InetAddress adrSrc = UDPReceiver.addressSrc;
-		System.out.println("[cNet212] "+ newPseudo + " say hello to me");
-		//String srcIP = adrSrc.toString()
-		//System.out.println("[cNet212] "+ srcIP + " IP");
-		nc.receivedFirstMsgHello(adrSrc, newPseudo);
+		InetAddress adrSrc = udpReceiver.getAddressIp();
+		System.out.println("[cNet212] "+ newPseudo + " preuve 2");
+		System.out.println("[cNet212] "+ adrSrc.toString() + "  IP Preuve 2");
+	
+		
+		//User userRemote = new User(newPseudo, adrSrc, null);
+		//this.addUserRemote(userRemote);
+		receivedFirstMsgHello(adrSrc, newPseudo);
 		
 		
 		udpReceiver.setStopThread(true);
 		udpSender.closeSocket();
 		udpReceiver.closeSocket();
 		
-		
-		
 	}
+	
+	
 	
 	private void receivedFirstMsgHello(InetAddress ipsrc, String message){
 		String usernameLocal = this.model.getUserLocal().getUsername();
 		String usernameRemote = message;
 		// default respond Hello not OK
 		
-		System.out.println("[cNet] "+ message + " say hello to me");
-		System.out.println("[cNet] "+ ipsrc + " IP");
+		System.out.println("[conNet] "+ message + " is the new pseudo");
+		System.out.println("[conNet] "+ ipsrc + " IP");
 		
 		if (!usernameLocal.equals(message)){
 			// if remote username is not the same pseudo in comparaison to mine
@@ -122,6 +144,29 @@ public class NetworkController {
 				userRemote.stopTimer();
 				this.model.removeUserRemote(userRemote);
 			}
+		}
+		
+		private void timerUserLocalHasExpired(){
+			this.model.getUserLocal().stopTimer();
+			if (this.model.getUserLocal().getState() == State.CONNECTING){
+				//this.timerCheck.start();
+				this.model.getUserLocal().setState(State.CONNECTED);
+				System.out.println("[Controller] It is connected");
+				//this.interf.setUIConnected();
+			}else{
+				//disconnected
+				//this.vue.setUIDisconnected();
+			}
+		}
+		
+		private void timerCheckHasExpired(){
+			this.nc.sendMsgCheck();
+		}
+		
+		void sendMsgCheck(){
+			System.out.println("[cNet] sendMsgCheck to all");
+			//MsgCheck msg = new MsgCheck(this.model.getUserLocal().getUsername(), "all", false);
+			//this.udpSender.sendMessBroadcast(msg);
 		}
 	
 	
