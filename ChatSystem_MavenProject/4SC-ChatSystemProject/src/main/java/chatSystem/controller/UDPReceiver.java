@@ -12,26 +12,30 @@ import javax.swing.event.EventListenerList;
 
 
 
-public class UDPReceiver implements Runnable {
+public class UDPReceiver extends Thread {
 	private DatagramSocket socketForReceive;
 	private EventListenerList listeners;
 	private Boolean stopThread;
 	private InetAddress addressSrc;
+	private int port = 5556;
 
 
-	public UDPReceiver() {
+	public UDPReceiver() throws SocketException {
+		this.socketForReceive = new DatagramSocket(this.port);
+		start();
+		
 		this.stopThread = false;
-		listeners = new EventListenerList();
+		/*listeners = new EventListenerList();
 		try {
 			this.socketForReceive = new DatagramSocket(5005);
 		} catch (SocketException e) {
 			e.printStackTrace();
-		}
+		}*/
 
 	}
 	
 	//thread
-	public void run() {
+	/*public void run() {
 		byte[] buf = new byte[2048];
 		String message = null;
 
@@ -81,7 +85,53 @@ public class UDPReceiver implements Runnable {
 		}
 		
 		
+	}*/
+	
+	
+	//THREAD
+	public void receive_Message() throws IOException {
+		byte[] buffer = new byte[256]; 
+		DatagramPacket inPacket = new DatagramPacket(buffer, buffer.length);
+		String text=""; 
+		int i = 1; 
+		String data; 
+		while (!text.equals("bye")){
+			//receive() method blocks until a datagram is received. 
+			socketForReceive.receive(inPacket);
+			//Accept the sender's address and port from the packet
+			InetAddress clientAddress = inPacket.getAddress(); 
+			int clientPort = inPacket.getPort(); 
+			System.out.println("client address : "+ clientAddress.toString() + " client port number : " + clientPort);
+			
+			//retrieve the data from the buffer
+			text = new String(inPacket.getData(), 0, inPacket.getLength()); 
+			System.out.println("Message received : " + text);
+			
+			//Create the response datagram
+			if (text.equals("bye")) data = "Last message from server! ";
+			else data = "Message: " +i+ " from server";
+			buffer = data.getBytes();
+			 
+			DatagramPacket response = new DatagramPacket(buffer, buffer.length, clientAddress, clientPort);
+			socketForReceive.send(response);
+			i++; 
+			//handle one client who can send one msg only
+		} 
+		
+		socketForReceive.close();
 	}
+	
+	public void run() {
+		try {
+			receive_Message();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+	}
+	
+	
+	
 	
 	/*public MessageListener[] getListeners() {
 		return listeners.getListeners(MessageListener.class);

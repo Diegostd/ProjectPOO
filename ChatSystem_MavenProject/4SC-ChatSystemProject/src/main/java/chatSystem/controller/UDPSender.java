@@ -1,6 +1,8 @@
 package chatSystem.controller;
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.ObjectOutputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -12,18 +14,25 @@ import chatSystem.interfaces.*;
 
 public class UDPSender {
 	private DatagramSocket socketSender;
+	private String hostname = "255.255.255.255"; 
+	private int port = 5556; 
+	private InetAddress address;
 
 
 
-	public UDPSender(){
+	public UDPSender() throws UnknownHostException{
 		try {
+			//Create a DatagramSocket object
 			this.socketSender = new DatagramSocket();
+			//conversion of hostname to InetAddress needed to send data packet
+			this.address = InetAddress.getByName(hostname);
 		} catch (SocketException e) {
 			System.err.println("Socket couldn't be created.");
 			e.printStackTrace();
 		}
 	}
-
+	
+	//Old function to send the message
 	//Create the part of the message that we will send
 	public void sendMessage(String message, InetAddress iptosend){
 		int port = 1234;
@@ -47,6 +56,38 @@ public class UDPSender {
 			e.printStackTrace();
 		}
 	}
+	
+	
+	//NEW
+	public void send_Message() throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        String text;
+        do {
+        	System.out.print("Enter something:");
+            text = br.readLine();
+            DatagramPacket outPacket = new DatagramPacket(text.getBytes(), text.length(), address, port);
+            socketSender.send(outPacket);
+            
+            //Create a buffer for incoming datagrams
+            byte[] buffer = new byte[256];
+            //Create a DatagramPacket object for the incoming datagram
+            DatagramPacket inPacket = new DatagramPacket(buffer, buffer.length);
+            //Accept an incoming datagram
+            socketSender.receive(inPacket);
+            //Retrieve the data from the buffer
+            String response = new String(inPacket.getData(), 0, inPacket.getLength());
+            System.out.println("received DATA from UDP Server = " + response); 
+           
+ 
+            
+        }	 while (!text.equals("bye"));
+        //Close the DatagramSocket:
+        socketSender.close();
+	}
+	
+	
+	
+	
 
 	public void sendMessageBroadcast(String msgToSend){
 		int port = 5005;

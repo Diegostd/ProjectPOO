@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
+import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.Timer;
 
@@ -22,7 +23,7 @@ public class NetworkController {
 	  private Timer timerCheck;
 	  
 
-	  public NetworkController() {
+	  public NetworkController() throws SocketException {
 		  this.preuve="toto";
 		  this.motdepassepreuve= "toto";
 		  User userLocal = null;
