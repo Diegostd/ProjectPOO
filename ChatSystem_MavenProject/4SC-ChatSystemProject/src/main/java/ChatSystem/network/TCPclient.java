@@ -32,11 +32,7 @@ public class TCPclient {
 	//the client is sending a msg --> we can have access locally to 
 	//récupérer le contenu du msg 
 	
-	String msgContent; //(et horodatage --> clé primaire : pk_history : IDsender, IDreceiver, et horodatage ) 
-	static Date date; 
-	String msgDate; 
-	static SimpleDateFormat sdf ; 
-	
+	String msgContent; //(et horodatage --> clé primaire : pk_history : IDsender, IDreceiver, et horodatage ) 	
 	
 	public static void main(String[] args) { 
         if (args.length < 2) return;
@@ -61,10 +57,9 @@ public class TCPclient {
  
                 writer.println(text); //envoi de la donnée 
                 //***time stamp
-                date = new Date();
-                sdf = new SimpleDateFormat("dd h:mm:ss a");
-                String formattedDate = sdf.format(date);
-                System.out.println("Enregistrement dans la BDD" +formattedDate);  
+                String formattedDate = new String(); 
+                formattedDate = Horodator.horodateMsg(); 
+                System.out.println("Enregistrement dans la BDD " + formattedDate);  
                 
                 //***enregistrement de l'échange dans la base de données centrale                             
                 
