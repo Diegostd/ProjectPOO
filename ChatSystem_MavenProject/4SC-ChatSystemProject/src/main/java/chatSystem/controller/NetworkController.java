@@ -2,6 +2,7 @@ package chatSystem.controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.SocketException;
@@ -28,7 +29,7 @@ public class NetworkController {
 		  this.motdepassepreuve= "toto";
 		  User userLocal = null;
 		  
-		  this.udpReceiver = new UDPReceiver();
+		  //this.udpReceiver = new UDPReceiver();
 		  //this.udps = new UDPSender();
 		  this.udprThread = new Thread(this.udpReceiver);
 		  this.udprThread.start();
@@ -62,7 +63,7 @@ public class NetworkController {
 	
 	/* when user connect, he must send a NewUserBroadcast*/
 	//@Test
-	public void NewUserBroadcast(String newPseudo) throws UnknownHostException {
+	public void NewUserBroadcast(String newPseudo) throws IOException {
 		// analyze the package that the controller sent
 		udpSender = new UDPSender();
 		udpSender.sendMessageBroadcast(newPseudo);
@@ -78,7 +79,7 @@ public class NetworkController {
 		//Test to add the user to the list, and check the fonctionality of the list
 		User userRemote = new User(newPseudo, adrSrc, null);
 		this.addUserRemote(userRemote);
-		receivedFirstMsgHello(adrSrc, newPseudo);
+		nc.receivedFirstMsgHello(adrSrc, newPseudo);
 		
 		//Close of the thread and close of the sockets
 		udpReceiver.setStopThread(true);
@@ -90,7 +91,7 @@ public class NetworkController {
 	
 	//Fonction for the first message that one person send when it connects to the system
 	//The first part to check the unicity
-	private void receivedFirstMsgHello(InetAddress ipsrc, String message){
+	public void receivedFirstMsgHello(InetAddress ipsrc, String message) throws IOException {
 		//Recuperation of the pseudo of the person of the local machine
 		//Recuperation of the pseudo remote, the person connecting
 		String usernameLocal = this.model.getUserLocal().getUsername();
@@ -108,7 +109,10 @@ public class NetworkController {
 				// reply Hello OK and add him in my list
 				
 				//**line of code under construction**MsgHello messageAck = new MsgHello(usernameLocal, usernameRemote, true, true);
-				this.udpSender.sendMessage("not OK", ipsrc);
+				String txt = "Ok";
+				UDPSender udpSenderr = new UDPSender(); 
+				//this.udpSender.sendMessage(txt, ipsrc);
+				udpSenderr.sendMessage(txt, ipsrc);
 				final String remoteUsername = message;
 				User userRemote = new User(message, ipsrc, new ActionListener()
 				{
@@ -124,7 +128,7 @@ public class NetworkController {
 		} else{
 			// he has the same username as the local, reply Hello not ok
 			//**line of code under construction** MsgHello mesack = new MsgHello(usernameLocal, usernameRemote, true, false);
-			this.udpSender.sendMessage("not OK", ipsrc);
+			this.udpSender.sendMessage("not OK, Same pseudo", ipsrc);
 
 		}
 		
@@ -139,6 +143,7 @@ public class NetworkController {
 			this.udps.sendMessBroadcast(msg);
 			this.writeAndDisplayLogLine("User sended Hello\n");
 		}*/
+	
 	
 		//Fonction to add the user
 		private void addUserRemote(User userRemote){

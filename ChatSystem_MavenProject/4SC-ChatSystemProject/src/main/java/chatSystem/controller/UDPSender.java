@@ -35,7 +35,7 @@ public class UDPSender {
 	//Old function to send the message
 	//Create the part of the message that we will send
 	public void sendMessage(String message, InetAddress iptosend){
-		int port = 1234;
+		int port = 5556;
 		byte[] buf = new byte[2048];
 
 		ByteArrayOutputStream Baos = new ByteArrayOutputStream();
@@ -62,27 +62,34 @@ public class UDPSender {
 	public void send_Message() throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         String text;
-        do {
+        try {
         	System.out.print("Enter something:");
             text = br.readLine();
             DatagramPacket outPacket = new DatagramPacket(text.getBytes(), text.length(), address, port);
             socketSender.send(outPacket);
             
             //Create a buffer for incoming datagrams
-            byte[] buffer = new byte[256];
+            /*byte[] buffer = new byte[256];
             //Create a DatagramPacket object for the incoming datagram
             DatagramPacket inPacket = new DatagramPacket(buffer, buffer.length);
             //Accept an incoming datagram
             socketSender.receive(inPacket);
             //Retrieve the data from the buffer
             String response = new String(inPacket.getData(), 0, inPacket.getLength());
-            System.out.println("received DATA from UDP Server = " + response); 
-           
+            System.out.println("received DATA from UDP Server = " + response);*/
+            
+            //socketSender.close();
  
             
-        }	 while (!text.equals("bye"));
-        //Close the DatagramSocket:
-        socketSender.close();
+        } catch (IOException e) {
+			System.err.println("message failed to send");
+			e.printStackTrace();
+		}	
+        
+        
+        /* while (!text.equals("bye"));
+        //Close the DatagramSocket:*/
+        
 	}
 	
 	

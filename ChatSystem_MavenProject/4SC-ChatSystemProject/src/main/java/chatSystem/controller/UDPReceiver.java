@@ -17,12 +17,13 @@ public class UDPReceiver extends Thread {
 	private EventListenerList listeners;
 	private Boolean stopThread;
 	private InetAddress addressSrc;
-	private int port = 5556;
+	NetworkController nc = new NetworkController();
+	//private int port = 5556;
 
 
-	public UDPReceiver() throws SocketException {
-		this.socketForReceive = new DatagramSocket(this.port);
-		start();
+	public UDPReceiver(int port) throws SocketException {
+		this.socketForReceive = new DatagramSocket(port);
+		//start();
 		
 		this.stopThread = false;
 		/*listeners = new EventListenerList();
@@ -88,14 +89,15 @@ public class UDPReceiver extends Thread {
 	}*/
 	
 	
-	//THREAD
+	
 	public void receive_Message() throws IOException {
+		NetworkController nc = new NetworkController();
 		byte[] buffer = new byte[256]; 
 		DatagramPacket inPacket = new DatagramPacket(buffer, buffer.length);
 		String text=""; 
 		int i = 1; 
 		String data; 
-		while (!text.equals("bye")){
+		while (!text.equals("not OK, Same pseudo")){
 			//receive() method blocks until a datagram is received. 
 			socketForReceive.receive(inPacket);
 			//Accept the sender's address and port from the packet
@@ -106,21 +108,26 @@ public class UDPReceiver extends Thread {
 			//retrieve the data from the buffer
 			text = new String(inPacket.getData(), 0, inPacket.getLength()); 
 			System.out.println("Message received : " + text);
+			//Check unicity
+			nc.receivedFirstMsgHello(clientAddress, text);
 			
-			//Create the response datagram
+			/*//Create the response datagram
 			if (text.equals("bye")) data = "Last message from server! ";
 			else data = "Message: " +i+ " from server";
 			buffer = data.getBytes();
 			 
 			DatagramPacket response = new DatagramPacket(buffer, buffer.length, clientAddress, clientPort);
-			socketForReceive.send(response);
+			socketForReceive.send(response);*/
 			i++; 
 			//handle one client who can send one msg only
+			
+			
 		} 
 		
 		socketForReceive.close();
 	}
 	
+	//THREAD
 	public void run() {
 		try {
 			receive_Message();
