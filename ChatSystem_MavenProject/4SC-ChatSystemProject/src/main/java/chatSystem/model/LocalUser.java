@@ -8,7 +8,6 @@ public class LocalUser {
 	String ID ; //@mail par exemple
 	private InetAddress IP; //c'est mon @IP 
 	int port; 
-
 	
 	public String getPseudo() {
 		return pseudo;
@@ -24,5 +23,21 @@ public class LocalUser {
 		this.ID = id;
 	} 
 	
+	public InetAddress getIP() {
+		return IP;
+	}
+	public void setIP(InetAddress iP) {
+		IP = iP;
+	}
+	
+	public int getPort() {
+		return port;
+	}
+	public void setPort(int port) {
+		this.port = port;
+	}
+	
+
+
 	
 }

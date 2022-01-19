@@ -1,4 +1,4 @@
-package ChatSystem.network;
+/*package ChatSystem.TCPhandler;
 
 import java.io.*;
 import java.net.*;
@@ -6,7 +6,7 @@ import java.net.*;
 
 
 /* This thread is responsible to handle client connection.*/
-public class ServerThread extends Thread {
+/*public class ServerThread extends Thread {
      
 	
 	 private Socket socket;
@@ -43,4 +43,4 @@ public class ServerThread extends Thread {
 	        }
 	    }
 	
-}
+} */ 

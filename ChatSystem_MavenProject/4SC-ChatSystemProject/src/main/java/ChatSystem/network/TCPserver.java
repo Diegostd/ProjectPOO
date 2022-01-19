@@ -9,36 +9,87 @@ import chatSystem.model.LocalUser;
 //à décliner pour un échange entre 2 agents sur des postes différents
 //contient un constructeur et une méthode receive 
 
-public class TCPserver {
 
-	private LocalUser clientAgent = new LocalUser();
+public class TCPserver extends Thread{
+     
+	private LocalUser serverAgent = new LocalUser();
+	private ServerSocket serverSock ; 
 	
-	public TCPserver() {
+	//getter et setter 
+		public LocalUser getServerAgent() {
+			return serverAgent;
+		}
+
+		public void setServerAgent(LocalUser serverAgent) {
+			this.serverAgent = serverAgent;
+		}
+	
+	
+	 //constructeur : permet d'initaliser le socket d'écoute en prenant en paramètre l'@ IP de l'agent 
+	public TCPserver(String ipAddress) throws Exception {
 		// TODO Auto-generated constructor stub
+		if (ipAddress != null && !ipAddress.isEmpty()) 
+	          this.serverSock = new ServerSocket(0, 1, InetAddress.getByName(ipAddress));
+	        else 
+	          this.serverSock = new ServerSocket(0, 1, InetAddress.getLocalHost());
+		
+		//mise à jour de l'@IP et du numéro de port du serveur 
+		serverAgent.setIP(serverSock.getInetAddress());
+		serverAgent.setPort(serverSock.getLocalPort());
+		System.out.println("Le port d'écoute est actif sur la machine  " + serverAgent.getIP() +" n° de port: " + serverAgent.getPort() ); 
+	}
+	
+	
+	 @SuppressWarnings("unused") //écoute et affichage des messages reçus 
+	private void listen() throws Exception {
+	        String data = null;
+	        Socket client = this.serverSock.accept();
+	        String clientAddress = client.getInetAddress().getHostAddress();
+	        System.out.println("\r\nNew connection from " + clientAddress);
+	        
+	        BufferedReader in = new BufferedReader(
+	                new InputStreamReader(client.getInputStream()));        
+	        while ( (data = in.readLine()) != null ) {
+	            System.out.println("\r\nMessage from " + clientAddress + ": " + data);
+	        }
+	    }
+
+	//affiche les infos d'établissement de connexion 
+	@SuppressWarnings("unused")
+	private void connexInfo (TCPserver app) {
+		
+		 System.out.println("\r\nRunning Server: " + 
+	                "Host=" + app.getSocketAddress().getHostAddress() + 
+	                " Port=" + app.getPort());
+	}
+	
+	
+	
+	private String getPort() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
+	private InetAddress getSocketAddress() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	
+	
+	
 	public static void main(String[] args) {
-		
-		 if (args.length < 1) return;
-		 int port = Integer.parseInt(args[0]);
-	 
-	    try (ServerSocket serverSocket = new ServerSocket(port)) {
-	 
-	    System.out.println("Server is listening on port " + port);
-	    while (true) {
-	                Socket socket = serverSocket.accept();
-	                System.out.println("New client connected");
-	 
-	                new ServerThread(socket).start(); //appellera la méthode run 
-	            }
-	 
-	        } catch (IOException ex) {
-	            System.out.println("Server exception: " + ex.getMessage());
-	            ex.printStackTrace();
-	        }
-			
+		try {
+			TCPserver app = new TCPserver("");
+			app.start(); 
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	
 		
 	}
+
+	
 }
 
 //constructeur + création socket 
