@@ -15,6 +15,7 @@ public class TCPserver extends Thread{
 	private LocalUser serverAgent = new LocalUser();
 	private ServerSocket serverSock ; 
 	
+	
 	//getter et setter 
 		public LocalUser getServerAgent() {
 			return serverAgent;
@@ -26,12 +27,14 @@ public class TCPserver extends Thread{
 	
 	
 	 //constructeur : permet d'initaliser le socket d'écoute en prenant en paramètre l'@ IP de l'agent 
-	public TCPserver(String ipAddress) throws Exception {
+	public TCPserver(String ipAddress, int port) throws Exception {
 		// TODO Auto-generated constructor stub
 		if (ipAddress != null && !ipAddress.isEmpty()) 
-	          this.serverSock = new ServerSocket(0, 1, InetAddress.getByName(ipAddress));
+	          this.serverSock = new ServerSocket(port, 1, InetAddress.getByName(ipAddress));
 	        else 
-	          this.serverSock = new ServerSocket(0, 1, InetAddress.getLocalHost());
+	          this.serverSock = new ServerSocket(port, 1, InetAddress.getLocalHost());
+		
+		System.out.println("Le port d'écoute est actif sur la machine  " + serverSock); 
 		
 		//mise à jour de l'@IP et du numéro de port du serveur 
 		serverAgent.setIP(serverSock.getInetAddress());
@@ -40,28 +43,39 @@ public class TCPserver extends Thread{
 	}
 	
 	
-	 @SuppressWarnings("unused") //écoute et affichage des messages reçus 
-	private void listen() throws Exception {
+	 //écoute et affichage des messages reçus 
+	 
+	public void run() {
+		 while (true) {
+			 System.out.println("heo"); 
 	        String data = null;
-	        Socket client = this.serverSock.accept();
-	        String clientAddress = client.getInetAddress().getHostAddress();
-	        System.out.println("\r\nNew connection from " + clientAddress);
-	        
-	        BufferedReader in = new BufferedReader(
-	                new InputStreamReader(client.getInputStream()));        
-	        while ( (data = in.readLine()) != null ) {
-	            System.out.println("\r\nMessage from " + clientAddress + ": " + data);
-	        }
+	        Socket client;
+			try {
+				client = this.serverSock.accept();
+				  String clientAddress = client.getInetAddress().getHostAddress();
+			        System.out.println("\r\nNew connection from " + clientAddress);
+			        
+			        BufferedReader in = new BufferedReader(
+			                new InputStreamReader(client.getInputStream()));        
+			        while ( (data = in.readLine()) != null ) {
+			            System.out.println("\r\nMessage from " + clientAddress + ": " + data);
+			        }
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	      
 	    }
+	 }
 
 	//affiche les infos d'établissement de connexion 
-	@SuppressWarnings("unused")
+	/*@SuppressWarnings("unused")
 	private void connexInfo (TCPserver app) {
 		
 		 System.out.println("\r\nRunning Server: " + 
 	                "Host=" + app.getSocketAddress().getHostAddress() + 
 	                " Port=" + app.getPort());
-	}
+	}*/
 	
 	
 	
@@ -76,11 +90,10 @@ public class TCPserver extends Thread{
 	}
 
 	
-	
-	
+
 	public static void main(String[] args) {
 		try {
-			TCPserver app = new TCPserver("");
+			TCPserver app = new TCPserver("",9090);  //10.1.5.28
 			app.start(); 
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

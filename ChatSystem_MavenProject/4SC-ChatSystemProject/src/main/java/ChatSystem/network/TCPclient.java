@@ -21,7 +21,7 @@ import chatSystem.model.LocalUser;
  * This program demonstrates a simple TCP/IP socket client that reads input
  * from the user and prints echoed message from the server. **/
 
-public class TCPclient {
+public class TCPclient extends Thread {
 	
 	//this serverAgent was selected in the connected userlist (method to be implemented) --> that's how we will have acces to the receiver ID
 	
@@ -38,36 +38,64 @@ public class TCPclient {
 	
 	public TCPclient(InetAddress serverAddress, int serverPort) throws Exception {	
 		System.out.println ("heho"); 
-		this.socketCli = new Socket(serverAddress, serverPort); //une fois le serveur lancé, si je remplace serverAddress par l'InetAddress du serveur et serverPort par le numéro 
-	
+		this.socketCli = new Socket(serverAddress, serverPort); 
+		//une fois le serveur lancé, si je remplace serverAddress par l'InetAddress du serveur et serverPort par le numéro de port du serveur ca fait un échec de connexion 
 		System.out.println("Le port d'écoute est actif sur la machine  " + socketCli.getLocalAddress() +" n° de port: " + socketCli.getPort() ); 
         this.scanner = new Scanner(System.in);
 	}
 	
 
-	 private void start() throws IOException {
-	        String input;
-	        while (true) {
+	 public void run() {
+		   String input;
+	       while (true) {
+	    	   do {
 	        	System.out.println("Enter text: ");
 	            input = scanner.nextLine();
-	            PrintWriter out = new PrintWriter(this.socketCli.getOutputStream(), true);	            
-	            out.println(input);
-	            //horodatage 
-	            String msgDate = clock.horodateMsg(); 
-	            System.out.println("Enregistrement dans la BDD " + msgDate);  
-	            //enregistrement dans la base de données    
-	            java.sql.Connection con = MysqlCon.connectBDD(); 
-                MysqlCon mysqlObj = new MysqlCon(); 
-                mysqlObj.addHistoryLine(con,clientMe.getID(),receiver.getID(), input, msgDate);	            
-	            out.flush();
+	            PrintWriter out;
 	            
-	            InputStream input1 = socketCli.getInputStream();
-	            BufferedReader reader1 = new BufferedReader(new InputStreamReader(input1)); //définition d'un nouveau buffer d'écoute sur le flux entrant
-                String time = reader1.readLine();
-                System.out.println(time);            
-	        }
+				try {
+					out = new PrintWriter(this.socketCli.getOutputStream(), true);
+					out.println(input);
+		            out.flush();
+		            
+		            //horodatage 
+		            String msgDate = clock.horodateMsg(); 
+		            System.out.println("Enregistrement dans la BDD " + msgDate);  
+		            //enregistrement dans la base de données    
+		            java.sql.Connection con = MysqlCon.connectBDD(); 
+	                MysqlCon mysqlObj = new MysqlCon(); 
+	                //mysqlObj.addHistoryLine(con,clientMe.getID(),receiver.getID(), input, msgDate);	   
+	                
+	                mysqlObj.addHistoryLine(con,"me","you", input, msgDate);
+	              
+			            
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}	}  
+				
+				while (!input.equals("bye"));	          
+	          
+	            InputStream input1;
+				try {
+					input1 = socketCli.getInputStream();
+					BufferedReader reader1 = new BufferedReader(new InputStreamReader(input1)); //définition d'un nouveau buffer d'écoute sur le flux entrant
+	                String time = reader1.readLine();
+	                System.out.println(time);           
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				  try {
+					socketCli.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} 
+	                 
+	       }
+	       
 	    }
-
 
 	public static void main(String[] args) { 
         
