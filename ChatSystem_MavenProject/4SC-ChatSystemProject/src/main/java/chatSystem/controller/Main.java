@@ -14,7 +14,6 @@ public class Main {
 	public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
 
-			@SuppressWarnings("unused")
 			
 			//controlGUI controlgui = new controlGUI();
 			//nc.NewUserBroadcast("titi");
@@ -23,7 +22,7 @@ public class Main {
 			//UDPListener serverUDP = new UDPListener("UDP_Server");
 			//UDPReceiver serverUDP = new UDPReceiver();
 			UDPSender client = new UDPSender();
-			UDPReceiver th1 = new UDPReceiver(5556);
+			UDPReceiver th1 = new UDPReceiver(5557);
 			//UDPReceiver th2 = new UDPReceiver(5557);
 			th1.start();
 			//th2.start();

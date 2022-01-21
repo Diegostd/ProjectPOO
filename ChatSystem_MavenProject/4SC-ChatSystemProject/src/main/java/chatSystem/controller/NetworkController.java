@@ -2,12 +2,19 @@ package chatSystem.controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.Timer;
+
+import javax.swing.DefaultListModel;
 
 import chatSystem.interfaces.*;
 import chatSystem.model.*;
@@ -19,12 +26,15 @@ public class NetworkController {
 	  private UDPReceiver udpReceiver;
 	  private Thread udprThread;
 	  private Model model;
+	  public static User lisUser;
+	  //creste a global list
+	  
 	  private NetworkController nc;
 	  //private ConnexionWindow interf;
 	  private Timer timerCheck;
 	  
 
-	  public NetworkController() throws SocketException {
+	  public NetworkController() throws IOException {
 		  this.preuve="toto";
 		  this.motdepassepreuve= "toto";
 		  User userLocal = null;
@@ -63,7 +73,7 @@ public class NetworkController {
 	
 	/* when user connect, he must send a NewUserBroadcast*/
 	//@Test
-	public void NewUserBroadcast(String newPseudo) throws IOException {
+	public void NewUserBroadcast(String newPseudo) throws IOException, ClassNotFoundException {
 		// analyze the package that the controller sent
 		udpSender = new UDPSender();
 		udpSender.sendMessageBroadcast(newPseudo);
@@ -91,28 +101,32 @@ public class NetworkController {
 	
 	//Fonction for the first message that one person send when it connects to the system
 	//The first part to check the unicity
-	public void receivedFirstMsgHello(InetAddress ipsrc, String message) throws IOException {
+	public void receivedFirstMsgHello(InetAddress ipsrc, String message) throws IOException, ClassNotFoundException {
+		
 		//Recuperation of the pseudo of the person of the local machine
 		//Recuperation of the pseudo remote, the person connecting
+		//System.out.println("[conNet] "+ message + " local machine pseudo");
 		String usernameLocal = this.model.getUserLocal().getUsername();
 		String usernameRemote = message;
 		
+		System.out.println("[conNet] "+ usernameLocal + " local machine pseudo");
 		// default respond Hello not OK
-		System.out.println("[conNet] "+ message + " is the new pseudo");
+		System.out.println("[conNet] "+ usernameRemote + " is the new pseudo");
 		System.out.println("[conNet] "+ ipsrc + " IP");
 		
 		//We check the pseudo of the user that has just been connected with the local pseudo
-		if (!usernameLocal.equals(message)){
+		if (!usernameLocal.equals(usernameRemote)){
+			//System.out.println("pseudos differents");
 			// if remote username is not the same pseudo in comparaison to mine
 			if (this.model.getUserRemoteByName(usernameRemote) == null){
 				// if remote username is valid, he is not already in my list
 				// reply Hello OK and add him in my list
 				
 				//**line of code under construction**MsgHello messageAck = new MsgHello(usernameLocal, usernameRemote, true, true);
-				String txt = "Ok";
-				UDPSender udpSenderr = new UDPSender(); 
+				//String txt = "Ok";
+				//UDPSender udpSenderr = new UDPSender(); 
 				//this.udpSender.sendMessage(txt, ipsrc);
-				udpSenderr.sendMessage(txt, ipsrc);
+				//udpSenderr.sendMessage(txt, ipsrc);
 				final String remoteUsername = message;
 				User userRemote = new User(message, ipsrc, new ActionListener()
 				{
@@ -128,7 +142,8 @@ public class NetworkController {
 		} else{
 			// he has the same username as the local, reply Hello not ok
 			//**line of code under construction** MsgHello mesack = new MsgHello(usernameLocal, usernameRemote, true, false);
-			this.udpSender.sendMessage("not OK, Same pseudo", ipsrc);
+			this.udpSender.sendMessage("notOK", ipsrc);
+			System.out.println("[conNet] Pseudo not ok, try again IP");
 
 		}
 		
@@ -146,8 +161,20 @@ public class NetworkController {
 	
 	
 		//Fonction to add the user
-		private void addUserRemote(User userRemote){
+		private void addUserRemote(User userRemote) throws IOException, ClassNotFoundException{
 			this.model.addUserRemote(userRemote);
+			FileOutputStream fos = new FileOutputStream("/C:/UsersList.tmp");
+			ObjectOutputStream oos = new ObjectOutputStream(fos);
+			oos.writeObject(Model.userList);
+			oos.close();
+			FileInputStream fis = new FileInputStream("t.tmp");
+			ObjectInputStream ois = new ObjectInputStream(fis);
+			@SuppressWarnings("unchecked")
+			DefaultListModel<ModelUserList> readObject = (DefaultListModel<ModelUserList>) ois.readObject();
+			DefaultListModel<ModelUserList> usrsLits = readObject;
+			System.out.println("[cNet] User List saved: "+usrsLits);
+			ois.close();
+			
 			//**line of code under construction** this.interf.getDefaultListModel().addElement(userRemote.getUsername());
 		}
 	

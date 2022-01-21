@@ -15,7 +15,7 @@ import chatSystem.interfaces.*;
 public class UDPSender {
 	private DatagramSocket socketSender;
 	private String hostname = "255.255.255.255"; 
-	private int port = 5556; 
+	private int port = 5557; 
 	private InetAddress address;
 
 
@@ -35,7 +35,7 @@ public class UDPSender {
 	//Old function to send the message
 	//Create the part of the message that we will send
 	public void sendMessage(String message, InetAddress iptosend){
-		int port = 5556;
+		int port = 5557;
 		byte[] buf = new byte[2048];
 
 		ByteArrayOutputStream Baos = new ByteArrayOutputStream();
@@ -65,6 +65,7 @@ public class UDPSender {
         try {
         	System.out.print("Enter something:");
             text = br.readLine();
+            System.out.print("text: "+text);
             DatagramPacket outPacket = new DatagramPacket(text.getBytes(), text.length(), address, port);
             socketSender.send(outPacket);
             

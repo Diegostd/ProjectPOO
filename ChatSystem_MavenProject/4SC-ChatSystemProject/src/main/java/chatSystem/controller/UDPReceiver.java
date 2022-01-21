@@ -17,7 +17,7 @@ public class UDPReceiver extends Thread {
 	private EventListenerList listeners;
 	private Boolean stopThread;
 	private InetAddress addressSrc;
-	NetworkController nc = new NetworkController();
+	//private NetworkController nc = new NetworkController();
 	//private int port = 5556;
 
 
@@ -90,14 +90,16 @@ public class UDPReceiver extends Thread {
 	
 	
 	
-	public void receive_Message() throws IOException {
+	public void receive_Message() throws IOException, ClassNotFoundException {
 		NetworkController nc = new NetworkController();
 		byte[] buffer = new byte[256]; 
 		DatagramPacket inPacket = new DatagramPacket(buffer, buffer.length);
 		String text=""; 
 		int i = 1; 
 		String data; 
-		while (!text.equals("not OK, Same pseudo")){
+		int test = 1;
+		while (!text.equals("notOk")){
+		//while (test==1) {
 			//receive() method blocks until a datagram is received. 
 			socketForReceive.receive(inPacket);
 			//Accept the sender's address and port from the packet
@@ -120,11 +122,11 @@ public class UDPReceiver extends Thread {
 			socketForReceive.send(response);*/
 			i++; 
 			//handle one client who can send one msg only
-			
+			test=0;
 			
 		} 
 		
-		socketForReceive.close();
+		//socketForReceive.close();
 	}
 	
 	//THREAD
@@ -132,6 +134,9 @@ public class UDPReceiver extends Thread {
 		try {
 			receive_Message();
 		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} 

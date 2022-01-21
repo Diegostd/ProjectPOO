@@ -1,10 +1,13 @@
 package chatSystem.model;
 
+import java.io.FileOutputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
 
-public class ModelUserList {
+public class ModelUserList implements Serializable{
 	private User user;
 	//Variable under construction
 	private Path chatHistoryFile;
@@ -19,6 +22,8 @@ public class ModelUserList {
 	public User getUser(){
 		return this.user;
 	}
+	
+	
 	
 	//Fonction only for utility, not used yet
 	public String toString(){
