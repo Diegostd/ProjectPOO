@@ -47,7 +47,7 @@ public class TCPclient extends Thread {
 
 	 public void run() {
 		   String input;
-	       while (true) {
+	     
 	    	   do {
 	        	System.out.println("Enter text: ");
 	            input = scanner.nextLine();
@@ -95,7 +95,7 @@ public class TCPclient extends Thread {
 	                 
 	       }
 	       
-	    }
+	    
 
 	public static void main(String[] args) { 
         
