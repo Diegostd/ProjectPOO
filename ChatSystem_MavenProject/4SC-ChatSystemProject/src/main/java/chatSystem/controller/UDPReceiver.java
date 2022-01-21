@@ -3,6 +3,7 @@ package chatSystem.controller;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.io.Serializable;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
@@ -12,7 +13,7 @@ import javax.swing.event.EventListenerList;
 
 
 
-public class UDPReceiver extends Thread {
+public class UDPReceiver extends Thread implements Serializable{
 	private DatagramSocket socketForReceive;
 	private EventListenerList listeners;
 	private Boolean stopThread;
@@ -98,7 +99,7 @@ public class UDPReceiver extends Thread {
 		int i = 1; 
 		String data; 
 		int test = 1;
-		while (!text.equals("notOk")){
+		while (!text.equals("bye")){
 		//while (test==1) {
 			//receive() method blocks until a datagram is received. 
 			socketForReceive.receive(inPacket);
@@ -111,22 +112,24 @@ public class UDPReceiver extends Thread {
 			text = new String(inPacket.getData(), 0, inPacket.getLength()); 
 			System.out.println("Message received : " + text);
 			//Check unicity
-			nc.receivedFirstMsgHello(clientAddress, text);
+			if (!text.equals("bye")) {
+				nc.receivedFirstMsgHello(clientAddress, text);	
+			}
 			
-			/*//Create the response datagram
+			//Create the response datagram
 			if (text.equals("bye")) data = "Last message from server! ";
 			else data = "Message: " +i+ " from server";
 			buffer = data.getBytes();
 			 
 			DatagramPacket response = new DatagramPacket(buffer, buffer.length, clientAddress, clientPort);
-			socketForReceive.send(response);*/
+			socketForReceive.send(response);
 			i++; 
 			//handle one client who can send one msg only
 			test=0;
 			
 		} 
 		
-		//socketForReceive.close();
+		socketForReceive.close();
 	}
 	
 	//THREAD

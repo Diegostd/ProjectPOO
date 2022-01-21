@@ -22,7 +22,7 @@ public class Model implements Serializable{
 	//We also declare a new list where users are saved
 	public Model(User userLocal) throws IOException {
 		this.userLocal = userLocal;
-		final Model.userList = new DefaultListModel<ModelUserList>();
+		Model.userList = new DefaultListModel<ModelUserList>();
 		//this.userLocal.setState(State.DISCONNECTED);
 		//this.localLog = Paths.get(this.userLocal.getUsername()+"Log.txt");
 		//this.cleanLog();

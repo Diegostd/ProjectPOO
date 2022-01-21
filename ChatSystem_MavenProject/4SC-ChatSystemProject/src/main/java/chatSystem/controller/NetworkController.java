@@ -8,10 +8,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
+import java.lang.reflect.Array;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.Timer;
 
 import javax.swing.DefaultListModel;
@@ -19,7 +22,7 @@ import javax.swing.DefaultListModel;
 import chatSystem.interfaces.*;
 import chatSystem.model.*;
 
-public class NetworkController {
+public class NetworkController implements Serializable, Cloneable{
 	  private String preuve;
 	  private String motdepassepreuve;
 	  private UDPSender udpSender;
@@ -116,9 +119,9 @@ public class NetworkController {
 		
 		//We check the pseudo of the user that has just been connected with the local pseudo
 		if (!usernameLocal.equals(usernameRemote)){
-			//System.out.println("pseudos differents");
+			System.out.println("pseudos differents");
 			// if remote username is not the same pseudo in comparaison to mine
-			if (this.model.getUserRemoteByName(usernameRemote) == null){
+			//if (this.model.getUserRemoteByName(usernameRemote) == null){
 				// if remote username is valid, he is not already in my list
 				// reply Hello OK and add him in my list
 				
@@ -136,14 +139,20 @@ public class NetworkController {
 					}
 				});
 				this.addUserRemote(userRemote);
-			} else{
+				System.out.println("Agregado en teoria");
+				//String txtest = model.getUserRemoteByName(usernameRemote).toString();
+				//System.out.println("Pseudo que obtuvo en la lista: "+txtest);
+			//} else{
 				// he is in my list, do not reply
-			}
+			//}
 		} else{
 			// he has the same username as the local, reply Hello not ok
 			//**line of code under construction** MsgHello mesack = new MsgHello(usernameLocal, usernameRemote, true, false);
-			this.udpSender.sendMessage("notOK", ipsrc);
-			System.out.println("[conNet] Pseudo not ok, try again IP");
+			UDPSender udps = new UDPSender();
+			//String txtest = model.getUserRemoteByName(usernameRemote).toString();
+			//System.out.println("Pseudo que obtuvo en la lista: "+txtest);
+			udps.send_MessageNew("bye", ipsrc);
+			System.out.println("Pseudo not possible, try again");
 
 		}
 		
@@ -163,17 +172,24 @@ public class NetworkController {
 		//Fonction to add the user
 		private void addUserRemote(User userRemote) throws IOException, ClassNotFoundException{
 			this.model.addUserRemote(userRemote);
+			
+			//SAVE OF THE LIST **under construction**
+			/*//System.out.println("[Model]List of remoteUsers:"+this.userList.toString());
+			@SuppressWarnings("unchecked")
+			DefaultListModel<ModelUserList> list = model.getRemoteUsers();
+			//DefaultListModel<ModelUserList> copy = new ArrayList<>(Model.userList);
+			//ArrayList<String> usersListCopy = (ArrayList<String>) list.cln();
 			FileOutputStream fos = new FileOutputStream("/C:/UsersList.tmp");
 			ObjectOutputStream oos = new ObjectOutputStream(fos);
-			oos.writeObject(Model.userList);
+			oos.writeObject(list);
 			oos.close();
-			FileInputStream fis = new FileInputStream("t.tmp");
+			FileInputStream fis = new FileInputStream("/C:/UsersList.tmp");
 			ObjectInputStream ois = new ObjectInputStream(fis);
 			@SuppressWarnings("unchecked")
-			DefaultListModel<ModelUserList> readObject = (DefaultListModel<ModelUserList>) ois.readObject();
-			DefaultListModel<ModelUserList> usrsLits = readObject;
+			DefaultListModel<ModelUserList> userLists= (DefaultListModel<ModelUserList>) ois.readObject();
+			DefaultListModel<ModelUserList> usrsLits = userLists;
 			System.out.println("[cNet] User List saved: "+usrsLits);
-			ois.close();
+			ois.close();*/
 			
 			//**line of code under construction** this.interf.getDefaultListModel().addElement(userRemote.getUsername());
 		}
@@ -218,6 +234,15 @@ public class NetworkController {
 			//this.udpSender.sendMessBroadcast(msg);
 		}
 	
+	
+		@SuppressWarnings("unchecked")
+		public DefaultListModel<ModelUserList> cln(){  
+		    try{  
+		        return (DefaultListModel<ModelUserList>) super.clone();  
+		    }catch(Exception e){ 
+		        return null; 
+		    }
+		}
 	
 
 	}

@@ -1,13 +1,14 @@
 package chatSystem.model;
 
 import java.awt.event.ActionListener;
+import java.io.Serializable;
 import java.net.InetAddress;
 
 import javax.swing.Timer;
 
 
 
-public class User{
+public class User implements Serializable{
 	private String username;
 	private InetAddress ip;
 	private State userState;
