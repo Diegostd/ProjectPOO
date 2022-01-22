@@ -15,64 +15,65 @@ import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Timer;
 
 import javax.swing.DefaultListModel;
 
 import chatSystem.interfaces.*;
 import chatSystem.model.*;
+import utils.NetworkUtils;
 
 public class NetworkController implements Serializable, Cloneable{
-	  private String preuve;
-	  private String motdepassepreuve;
 	  private UDPSender udpSender;
 	  private UDPReceiver udpReceiver;
 	  private Thread udprThread;
+	  private User user;
 	  private Model model;
-	  public static User lisUser;
-	  //creste a global list
-	  
 	  private NetworkController nc;
-	  //private ConnexionWindow interf;
 	  private Timer timerCheck;
+	  
+	  private HashMap<String, Messages> usersList;
+	  private String nickname;
+	  private String localPhone = user.getUserPhone();
+	  
+	  //private tcp chat; line of code for the tcp
+	  //private Network listener listener;
+	  //private TCPListener tcplistener; listener of the tcp
+	  //private Chat view chatView = null;
+	  
+	  //create a global list
+	  
+	 
+	  //private ConnexionWindow interf;
+	  
 	  
 
 	  public NetworkController() throws IOException {
-		  this.preuve="toto";
-		  this.motdepassepreuve= "toto";
+		  this.usersList = new HashMap<String, Messages>();
+		  
 		  User userLocal = null;
 		  
 		  //this.udpReceiver = new UDPReceiver();
 		  //this.udps = new UDPSender();
 		  this.udprThread = new Thread(this.udpReceiver);
 		  this.udprThread.start();
-
 			try {
-				userLocal = new User("titi", InetAddress.getLocalHost(), new ActionListener()
-				{
-					public void actionPerformed(ActionEvent e)
-					{
-						timerUserLocalHasExpired();
-					}
-				});
+				String ph = "338119826737";
+				userLocal = new User("titi", InetAddress.getLocalHost(), ph); 
 			} catch (UnknownHostException e1) {
 				e1.printStackTrace();
 			}
 			this.model = new Model(userLocal);
 			//this.cNet = new ControllerNetwork(model, interf);
+			
+			
 		  }
 	  
+	  public boolean isConnected() {
+			return user.getIp() != null;
+		}
 	  
-	public boolean testPseudo (String pseudo){
-		if (pseudo.equals(preuve)&&pseudo.equals(motdepassepreuve)) {
-			return true;
-			
-		}
-		else {
-			return false;	
-		}
-		
-	}
 	
 	/* when user connect, he must send a NewUserBroadcast*/
 	//@Test
@@ -90,7 +91,7 @@ public class NetworkController implements Serializable, Cloneable{
 		System.out.println("[cNet212] "+ adrSrc.toString() + "  IP Preuve 2");
 	
 		//Test to add the user to the list, and check the fonctionality of the list
-		User userRemote = new User(newPseudo, adrSrc, null);
+		User userRemote = new User(newPseudo, adrSrc);
 		this.addUserRemote(userRemote);
 		nc.receivedFirstMsgHello(adrSrc, newPseudo);
 		
@@ -131,13 +132,7 @@ public class NetworkController implements Serializable, Cloneable{
 				//this.udpSender.sendMessage(txt, ipsrc);
 				//udpSenderr.sendMessage(txt, ipsrc);
 				final String remoteUsername = message;
-				User userRemote = new User(message, ipsrc, new ActionListener()
-				{
-					public void actionPerformed(ActionEvent e)
-					{
-						aTimerHasExpired(remoteUsername);
-					}
-				});
+				User userRemote = new User(message, ipsrc);
 				this.addUserRemote(userRemote);
 				System.out.println("Agregado en teoria");
 				//String txtest = model.getUserRemoteByName(usernameRemote).toString();

@@ -11,13 +11,15 @@ import javax.swing.Timer;
 public class User implements Serializable{
 	private String username;
 	private InetAddress ip;
+	private String phone;
 	private State userState;
 	private Timer timer;
 
 
-	public User(String username, InetAddress ip, ActionListener action) {
+	public User(String username, InetAddress ip, String phone) {
 		this.username = username;
 		this.ip = ip;
+		this.phone = phone;
 		//The states and the timer are not not fully implemented yet
 		//this.userState=State.DISCONNECTED;
 		//this.timer=new Timer(3000,action);
@@ -43,6 +45,10 @@ public class User implements Serializable{
 
 	public String getUsername() {
 		return username;
+	}
+	
+	public String  getUserPhone() {
+		return phone;
 	}
 
 	public void setUsername(String username) {
