@@ -22,7 +22,6 @@ import javax.swing.DefaultListModel;
 
 import chatSystem.interfaces.*;
 import chatSystem.model.*;
-import utils.NetworkUtils;
 
 public class NetworkController implements Serializable, Cloneable{
 	  private UDPSender udpSender;
