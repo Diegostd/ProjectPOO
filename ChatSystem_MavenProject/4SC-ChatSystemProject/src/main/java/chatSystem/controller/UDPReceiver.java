@@ -12,7 +12,6 @@ import java.net.SocketException;
 import javax.swing.event.EventListenerList;
 
 import chatSystem.model.Messages;
-import services.MessageService;
 
 
 
