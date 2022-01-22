@@ -16,7 +16,7 @@ public class UDPMessage implements Serializable{
 	private String message;
 	private Timestamp timer;
 	private String userPseudo;
-	private int userPhone;
+	private String userPhone;
 	private InetAddress sourceAddress;
 	private User user;
 	

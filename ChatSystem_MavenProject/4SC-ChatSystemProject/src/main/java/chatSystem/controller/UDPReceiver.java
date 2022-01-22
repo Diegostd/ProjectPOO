@@ -11,36 +11,30 @@ import java.net.SocketException;
 
 import javax.swing.event.EventListenerList;
 
-import chatSystem.model.Messages;
-import services.MessageService;
-
 
 
 public class UDPReceiver extends Thread implements Serializable{
-	private Messages messageExchanged;
 	private DatagramSocket socketForReceive;
-	private boolean running = true;
 	private EventListenerList listeners;
 	private Boolean stopThread;
 	private InetAddress addressSrc;
-	private int timeExpired = 2100;
 	//private NetworkController nc = new NetworkController();
 	//private int port = 5556;
 
 
-	public UDPReceiver(int port, Messages messagesExchanged) throws SocketException {
+	public UDPReceiver(int port) throws SocketException {
 		this.socketForReceive = new DatagramSocket(port);
-		this.stopThread = false;
 		//start();
+		
+		this.stopThread = false;
+		/*listeners = new EventListenerList();
 		try {
-			this.messageExchanged = messagesExchanged;
 			this.socketForReceive = new DatagramSocket(5005);
 		} catch (SocketException e) {
 			e.printStackTrace();
-		}
+		}*/
 
 	}
-	
 	
 	//thread
 	/*public void run() {
@@ -97,15 +91,16 @@ public class UDPReceiver extends Thread implements Serializable{
 	
 	
 	
-	public void listenerToUDPMessages() throws IOException, ClassNotFoundException {
+	public void receive_Message() throws IOException, ClassNotFoundException {
 		NetworkController nc = new NetworkController();
 		byte[] buffer = new byte[256]; 
 		DatagramPacket inPacket = new DatagramPacket(buffer, buffer.length);
+		String text=""; 
 		int i = 1; 
 		String data; 
-		
-		socketForReceive.setSoTimeout(timeExpired);
-		while (running){
+		int test = 1;
+		while (!text.equals("bye")){
+		//while (test==1) {
 			//receive() method blocks until a datagram is received. 
 			socketForReceive.receive(inPacket);
 			//Accept the sender's address and port from the packet
@@ -134,20 +129,38 @@ public class UDPReceiver extends Thread implements Serializable{
 			
 		} 
 		
-		closeSocket();
+		socketForReceive.close();
 	}
 	
 	//THREAD
 	public void run() {
-		listenerToUDPMessages(); 
+		try {
+			receive_Message();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
 	}
 	
 	
-	 public void setRunning(boolean running) {
-	        this.running = running;
-	    }
 	
 	
+	/*public MessageListener[] getListeners() {
+		return listeners.getListeners(MessageListener.class);
+	}*/
+
+	/*protected void NewReceivedMessage(InetAddress ipsrc, String message){
+		for (MessageListener listener : getListeners()){
+			listener.aMessageHasBeenReceived(ipsrc, message);
+		}
+	}*/
+	
+	//Fonction to obtain the AdressIp
+	//Before this, I also tried to get the address by declaring 
+	//it as public static, but it didn't work either
 	public InetAddress getAddressIp() {
 	     return this.addressSrc;
 	  }
@@ -155,14 +168,29 @@ public class UDPReceiver extends Thread implements Serializable{
 	public void setStopThread(Boolean stop){
 		this.stopThread = stop;
 	}
-	
+
 	public void closeSocket(){
 		if (!this.socketForReceive.isClosed()){
 			this.socketForReceive.close();
 		}
 	}
 	
+	/*public void CheckUnicity(String newPseudo) {
+		if (UsersList.contains(newPseudo)) {
+			
+		}
+	}*/
 	
+	
+	
+	//Fonctions under construction
+	public EventListenerList getListeners() {
+		return listeners;
+	}
+
+	public void setListeners(EventListenerList listeners) {
+		this.listeners = listeners;
+	}
 	
 	
 
