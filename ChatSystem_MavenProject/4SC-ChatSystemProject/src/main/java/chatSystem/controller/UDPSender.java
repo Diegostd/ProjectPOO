@@ -11,6 +11,7 @@ import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 
+import chatSystem.interfaces.*;
 
 public class UDPSender implements Serializable {
 	private DatagramSocket socketSender;

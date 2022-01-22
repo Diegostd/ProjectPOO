@@ -71,7 +71,7 @@ public class UDPMessage implements Serializable{
 		return this.status;
 	}
 
-	public int getUserPhone() {
+	public String getUserPhone() {
 		return this.userPhone;
 	}
 
