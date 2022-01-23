@@ -16,6 +16,8 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Timer;
 
 import javax.swing.DefaultListModel;
@@ -26,15 +28,15 @@ import chatSystem.model.*;
 public class NetworkController implements Serializable, Cloneable{
 	  private UDPSender udpSender;
 	  private UDPReceiver udpReceiver;
+	  private UDPMessage udpm;
 	  private Thread udprThread;
 	  private User user;
-	  private Model model;
+	  private ModelMessages modelM;
 	  private NetworkController nc;
-	  private Timer timerCheck;
-	  
-	  private HashMap<String, Messages> usersList;
-	  private String nickname;
+	  private HashMap<String,ModelMessages> usersList;
+	  private String pseudo;
 	  private String localPhone = user.getUserPhone();
+	  private Timer timerCheck;
 	  
 	  //private tcp chat; line of code for the tcp
 	  //private Network listener listener;
@@ -49,7 +51,7 @@ public class NetworkController implements Serializable, Cloneable{
 	  
 
 	  public NetworkController() throws IOException {
-		  this.usersList = new HashMap<String, Messages>();
+		  this.usersList = new HashMap<String, ModelMessages>();
 		  
 		  User userLocal = null;
 		  
@@ -63,15 +65,23 @@ public class NetworkController implements Serializable, Cloneable{
 			} catch (UnknownHostException e1) {
 				e1.printStackTrace();
 			}
-			this.model = new Model(userLocal);
+			this.modelM = new Model(userLocal);
 			//this.cNet = new ControllerNetwork(model, interf);
 			
 			
 		  }
 	  
-	  public boolean isConnected() {
+	  public boolean isUserConnected() {
 			return user.getIp() != null;
 		}
+	  
+	  private UDPReceiver getListenerThread() throws SocketException {
+		  int portBroadcast = 5556;
+		  return new UDPReceiver(portBroadcast, this);
+		  
+	  }
+	  
+	  //********Tcp listener here********
 	  
 	
 	/* when user connect, he must send a NewUserBroadcast*/
@@ -100,6 +110,112 @@ public class NetworkController implements Serializable, Cloneable{
 		udpReceiver.closeSocket();
 		
 	}
+	
+	public void notifyToAllUserStateUpdate(State state) {
+		System.out.println("Type of broadcast: " + state);
+		String broadcast = new UDPMessage(this.pseudo).withTheStatus(state).toString();
+		udpSender.sendMessageBroadcastUDP(broadcast);
+	}
+	
+	
+	
+	public HashMap<String, String> getAllConnectedUsers() {
+		HashMap<String, String> pseudos = new HashMap<String, String>();
+		for (Map.Entry<String, ModelMessages> user : usersList.entrySet()) {
+			pseudos.put(user.getValue().getMessagePseudo(), user.getKey());
+		}
+		return pseudos;
+		}
+	
+	public String getUserPhoneByPseudo(String pseudo) {
+		HashMap<String, String> users = getAllConnectedUsers();
+		if (users.containsKey(pseudo))
+			return users.get(pseudo);
+		return null;
+	}
+	
+	public void toUpdateOrAddUser(String userPhone, String newPseudo, String address) throws IOException {
+		
+		if (userPhone.equals(localPhone)) {
+			return;
+		}
+		
+		if (!this.usersList.containsKey(userPhone)) {
+			//ADD VERIFICATION TO ADD TO THE LIST
+			usersList.put(userPhone, new ModelMessages(newPseudo, address));
+		}
+		else {
+			//ADD VERIFICATION TO ADD TO THE LIST
+			String oldPseudo = usersList.get(userPhone).getMessagePseudo();
+			if (!newPseudo .equals(oldPseudo)) {
+				usersList.get(userPhone).setPseudo(newPseudo);
+				
+				//Insert line to update the list view of the users
+			}
+		}
+		//INSERT LINE TO VIEW CONNECTEDUSERSLISTS
+	}
+		
+		public void removeUserForDisconnection(String ID) {
+			System.out.println("User removed: " + ID);
+			usersList.remove(ID);
+			
+			//INSERT LINE TO UPDATE THE VIEW OF CONNECTES USERS
+		}
+				
+		
+		
+		public void controllerOfANewMessage(String phone, Messages message) {
+			usersList.get(phone).addANewMessage(message);
+			
+			//INSERT LINE TO UPDATE THE USERS MESSAGES, FOR VIEW
+		}
+		
+		
+		private void sendPseudo(UDPMessage message) {
+			String pseudoMSG = new UDPMessage(pseudo).withTheStatus(State.CONNECTING).serializeMessage();
+			udpSender.send_MessageUDP(pseudoMSG, message.getSourceAddress());
+		}
+		
+		
+		private boolean pseudoUnicity(String pseudo, State state) {
+			if (!this.getAllConnectedUsers().containsKey(pseudo)) {
+				this.pseudo = pseudo;
+				this.notifyToAllUserStateUpdate(state);
+				return true;
+			} else {
+				return false;
+			}
+			
+		}
+
+
+		
+		public void newReceivedBroadcastMessage(UDPMessage message) throws IOException {
+			State state = message.getState();
+			String phone = message.getUserPhone();
+			String pseudo = message.getSourcePseudo();
+			String address = message.getSourceAddress().toString();
+
+			System.out.println("Type of broadcast: " + state);
+			
+			if (state == State.CONNECTED) {
+				
+			}
+			if (state == State.CONNECTING) {
+				this.toUpdateOrAddUser(phone, pseudo, address);
+			}
+			if (state == State.DISCONNECTED) {
+	
+			}
+			if (state == State.UPDATE) {
+	
+			}	
+			
+		}
+			
+			
+	
 	
 	
 	//Fonction for the first message that one person send when it connects to the system
@@ -226,16 +342,6 @@ public class NetworkController implements Serializable, Cloneable{
 			System.out.println("[cNet] sendMsgCheck to all");
 			//MsgCheck msg = new MsgCheck(this.model.getUserLocal().getUsername(), "all", false);
 			//this.udpSender.sendMessBroadcast(msg);
-		}
-	
-	
-		@SuppressWarnings("unchecked")
-		public DefaultListModel<ModelUserList> cln(){  
-		    try{  
-		        return (DefaultListModel<ModelUserList>) super.clone();  
-		    }catch(Exception e){ 
-		        return null; 
-		    }
 		}
 	
 

@@ -6,7 +6,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 import chatSystem.interfaces.ConnexionWindow;
-import chatSystem.model.Model;
+import chatSystem.model.ModelMessages;
 import chatSystem.model.User;
 
 public class Main {

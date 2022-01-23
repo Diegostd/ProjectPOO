@@ -111,14 +111,24 @@ public class UDPSender implements Serializable {
        
 	
 	
-	
+	public void send_MessageUDP(String message, InetAddress IP)  {
+		try {
+			byte[] buffer = message.getBytes();
+			DatagramPacket pck = new DatagramPacket(buffer, buffer.length, address, port);
+			socketSender.send(pck);
+			socketSender.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("Exception in sending the UDP message");
+		}
+		
+	}
 	
 
-	public void sendMessageBroadcast(String msgToSend){
-		int port = 5005;
+	public void sendMessageBroadcastUDP(String msgToSend){
 		byte[] buffer = new byte[2048];
 
-		// Here we create the packet to send
+		// Here we create the packet to send into a byte array (Serialize)
 		ByteArrayOutputStream Baos = new ByteArrayOutputStream();
 		try {
 			ObjectOutputStream Oos = new ObjectOutputStream(Baos);
@@ -131,8 +141,8 @@ public class UDPSender implements Serializable {
 
 		// Here we send the packet on broadcast
 		try {
-			InetAddress iptosend = InetAddress.getByName("255.255.255.255");
-			DatagramPacket MSGToSend = new DatagramPacket(buffer, buffer.length, iptosend, port);
+			//InetAddress iptosend = InetAddress.getByName("255.255.255.255");
+			DatagramPacket MSGToSend = new DatagramPacket(buffer, buffer.length, address, port);
 
 			this.socketSender.send(MSGToSend);
 		}catch (SocketException e){

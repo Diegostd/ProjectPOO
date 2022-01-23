@@ -26,8 +26,8 @@ public class UDPMessage implements Serializable{
 		this.userPseudo = pseudo;
 		this.userPhone = user.getUserPhone();
 		this.sourceAddress = user.getIp();
-		Timestamp startOfConnection = new Timestamp(System.currentTimeMillis());
-		this.timer = startOfConnection;
+		Timestamp timestartOfConnection = new Timestamp(System.currentTimeMillis());
+		this.timer = timestartOfConnection;
 	}
 	
 	private UDPMessage() {
@@ -41,15 +41,14 @@ public class UDPMessage implements Serializable{
 		return this;
 	}
 
-	public UDPMessage getStatus(State status) {
-		this.status = status;
-		return this;
+	public State getState() {
+		return this.status;
 	}
 
-	public UDPMessage getSourceAddress(InetAddress srcAddress) {
+	/*public UDPMessage getSourceAddress(InetAddress srcAddress) {
 		this.sourceAddress = srcAddress;
 		return this;
-	}
+	}*/
 
 	public InetAddress getSourceAddress() {
 		return this.sourceAddress;
@@ -67,35 +66,36 @@ public class UDPMessage implements Serializable{
 		return this.userPseudo;
 	}
 
-	public State getStatus() {
-		return this.status;
-	}
-
 	public String getUserPhone() {
 		return this.userPhone;
+	}
+	
+	public UDPMessage withTheStatus(State state) {
+		this.status = state;
+		return this;
 	}
 
 	public String serializeMessage() {
 		try {
 			ByteArrayOutputStream bo = new ByteArrayOutputStream();
-			String serializedObject = "";
+			String objSerialized = "";
 			ObjectOutputStream so = new ObjectOutputStream(bo);
 			so.writeObject(this);
 			so.flush();
-			serializedObject = new String(Base64.getEncoder().encode(bo.toByteArray()));
-			return serializedObject;
+			objSerialized = new String(Base64.getEncoder().encode(bo.toByteArray()));
+			return objSerialized;
 		} catch (Exception e) {
 			e.printStackTrace();
 			return "";
 		}
 	}
 
-	public static UDPMessage deserializeMessage(String serializedObject) {
+	public static UDPMessage deserializeMessage(String objSerialized) {
 		try {
-			byte b[] = Base64.getDecoder().decode(serializedObject.getBytes());
-			ByteArrayInputStream bi = new ByteArrayInputStream(b);
-			ObjectInputStream si = new ObjectInputStream(bi);
-			return (UDPMessage) si.readObject();
+			byte bytes[] = Base64.getDecoder().decode(objSerialized.getBytes());
+			ByteArrayInputStream bains = new ByteArrayInputStream(bytes);
+			ObjectInputStream ois = new ObjectInputStream(bains);
+			return (UDPMessage) ois.readObject();
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new UDPMessage();

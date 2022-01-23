@@ -8,18 +8,19 @@ public class Messages implements Serializable{
 
 	    private final String message;
 	    private final Date horoDate;
-	    private final User sender;
+	    //private final User sender;
+	    private final String userPhone;
 	    private Timestamp timer;
 	    
 
-	    public Messages(String message, User transmitter)
+	    public Messages(String message, String userPhone)
 	    {
 	    	this.timer = new Timestamp(System.currentTimeMillis());
 	        this.message= message;
 	        this.horoDate = new Date();
-	        this.sender = transmitter;
-
+	        this.userPhone = userPhone;
 	    }
+	    
 
 	    public String getMessage()
 	    {
@@ -37,7 +38,7 @@ public class Messages implements Serializable{
 
 	    }
 
-	    public User getTransmitter() {
-	        return sender;
+	    public String getUserPhone() {
+	        return userPhone;
 	    }
 	}

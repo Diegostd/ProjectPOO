@@ -8,6 +8,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
+import java.net.SocketTimeoutException;
 
 import javax.swing.event.EventListenerList;
 
@@ -27,13 +28,13 @@ public class UDPReceiver extends Thread implements Serializable{
 	//private int port = 5556;
 
 
-	public UDPReceiver(int port, Messages messagesExchanged) throws SocketException {
+	public UDPReceiver(int port, NetworkController messagesExchanged) throws SocketException {
 		this.socketForReceive = new DatagramSocket(port);
 		this.stopThread = false;
 		//start();
 		try {
 			this.messageExchanged = messagesExchanged;
-			this.socketForReceive = new DatagramSocket(5005);
+			this.socketForReceive = new DatagramSocket(port);
 		} catch (SocketException e) {
 			e.printStackTrace();
 		}
@@ -101,20 +102,28 @@ public class UDPReceiver extends Thread implements Serializable{
 		byte[] buffer = new byte[256]; 
 		DatagramPacket inPacket = new DatagramPacket(buffer, buffer.length);
 		int i = 1; 
+		String text="";
 		String data; 
 		
 		socketForReceive.setSoTimeout(timeExpired);
 		while (running){
-			//receive() method blocks until a datagram is received. 
-			socketForReceive.receive(inPacket);
-			//Accept the sender's address and port from the packet
-			InetAddress clientAddress = inPacket.getAddress(); 
-			int clientPort = inPacket.getPort(); 
-			System.out.println("client address : "+ clientAddress.toString() + " client port number : " + clientPort);
 			
-			//retrieve the data from the buffer
-			text = new String(inPacket.getData(), 0, inPacket.getLength()); 
-			System.out.println("Message received : " + text);
+			try {
+				//receive() method blocks until a datagram is received.
+				socketForReceive.receive(inPacket);
+				//Accept the sender's address and port from the packet
+				InetAddress clientAddress = inPacket.getAddress(); 
+				int clientPort = inPacket.getPort(); 
+				System.out.println("client address : "+ clientAddress.toString() + " client port number : " + clientPort);
+				
+				//retrieve the data from the buffer
+				text = new String(inPacket.getData(), 0, inPacket.getLength()); 
+				System.out.println("Message received : " + text);
+				this.messageExchanged.BroadcastReceived(text);
+			} catch (SocketTimeoutException e) {	
+			}
+			
+		/*//This is for another part
 			//Check unicity
 			if (!text.equals("bye")) {
 				nc.receivedFirstMsgHello(clientAddress, text);	
@@ -127,18 +136,24 @@ public class UDPReceiver extends Thread implements Serializable{
 			 
 			DatagramPacket response = new DatagramPacket(buffer, buffer.length, clientAddress, clientPort);
 			socketForReceive.send(response);
-			i++; 
 			//handle one client who can send one msg only
-			test=0;
 			
-		} 
+		} */
 		
 		closeSocket();
+		}
 	}
 	
+		
+		
 	//THREAD
 	public void run() {
-		listenerToUDPMessages(); 
+		try {
+			listenerToUDPMessages();
+		} catch (ClassNotFoundException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
 	}
 	
 	
