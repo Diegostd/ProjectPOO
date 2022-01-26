@@ -7,7 +7,7 @@ import java.sql.Timestamp;
 public class Messages implements Serializable{
 
 	    private final String message;
-	    private final Date horoDate;
+	    //private final Date horoDate;
 	    //private final User sender;
 	    private final String userPhone;
 	    private Timestamp timer;
@@ -17,9 +17,18 @@ public class Messages implements Serializable{
 	    {
 	    	this.timer = new Timestamp(System.currentTimeMillis());
 	        this.message= message;
-	        this.horoDate = new Date();
+	        //this.horoDate = new Date();
 	        this.userPhone = userPhone;
 	    }
+	    
+	   
+	    public Messages(String msg, String usrPhone, Timestamp timeStamp)
+	    {
+	    	timer = timeStamp;
+			message = msg;
+			userPhone = usrPhone;
+	    }
+	    
 	    
 
 	    public String getMessage()

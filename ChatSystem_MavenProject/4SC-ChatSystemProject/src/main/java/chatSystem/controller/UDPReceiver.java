@@ -12,31 +12,33 @@ import java.net.SocketTimeoutException;
 
 import javax.swing.event.EventListenerList;
 
-import chatSystem.model.Messages;
+import chatSystem.model.*;
 
 
 
 public class UDPReceiver extends Thread implements Serializable{
-	private Messages messageExchanged;
+	private NetworkController messageExchanged;
 	private DatagramSocket socketForReceive;
+	private UDPSender udps;
+	private UDPMessage udpm;
+	private State state;
 	private boolean running = true;
 	private EventListenerList listeners;
 	private Boolean stopThread;
 	private InetAddress addressSrc;
-	private int timeExpired = 2100;
+	private int timeExpired = 1000;
 	//private NetworkController nc = new NetworkController();
 	//private int port = 5556;
 
 
 	public UDPReceiver(int port, NetworkController messagesExchanged) throws SocketException {
-		this.socketForReceive = new DatagramSocket(port);
-		this.stopThread = false;
 		//start();
 		try {
-			this.messageExchanged = messagesExchanged;
 			this.socketForReceive = new DatagramSocket(port);
+			this.messageExchanged = messagesExchanged;
 		} catch (SocketException e) {
 			e.printStackTrace();
+			 System.out.println("Problem in creating the listener for the UDPReceiver");
 		}
 
 	}
@@ -98,28 +100,32 @@ public class UDPReceiver extends Thread implements Serializable{
 	
 	
 	public void listenerToUDPMessages() throws IOException, ClassNotFoundException {
-		NetworkController nc = new NetworkController();
-		byte[] buffer = new byte[256]; 
-		DatagramPacket inPacket = new DatagramPacket(buffer, buffer.length);
-		int i = 1; 
+		System.out.println("[UDPReceiver] UPD Listener is listening");
 		String text="";
-		String data; 
 		
 		socketForReceive.setSoTimeout(timeExpired);
 		while (running){
-			
+			byte[] buffer = new byte[48000]; 
 			try {
+				DatagramPacket inPacket = new DatagramPacket(buffer, buffer.length);
 				//receive() method blocks until a datagram is received.
 				socketForReceive.receive(inPacket);
 				//Accept the sender's address and port from the packet
 				InetAddress clientAddress = inPacket.getAddress(); 
 				int clientPort = inPacket.getPort(); 
-				System.out.println("client address : "+ clientAddress.toString() + " client port number : " + clientPort);
+				System.out.println("[UDPReceiver] client address : "+ clientAddress.toString() + " client port number : " + clientPort);
 				
 				//retrieve the data from the buffer
 				text = new String(inPacket.getData(), 0, inPacket.getLength()); 
-				System.out.println("Message received : " + text);
-				this.messageExchanged.BroadcastReceived(text);
+				//UDPMessage udpMessage = UDPMessage.deserializeMessage(text); Option 1
+				UDPMessage udpMessage = new UDPMessage(text); //Option 2
+				//UDPMessage udpMessage = UDPMessage.deserializeMessage(text);
+				//State state = State.CONNECTING;
+				//udpMessage.withTheStatus();
+				System.out.println("[UDPReceiver] Message received : " + text);
+				if(!udpMessage.getUserPhone().equals("7894561232")) {
+					this.messageExchanged.newReceivedBroadcastMessage(udpMessage);
+				}
 			} catch (SocketTimeoutException e) {	
 			}
 			
@@ -139,9 +145,9 @@ public class UDPReceiver extends Thread implements Serializable{
 			//handle one client who can send one msg only
 			
 		} */
-		
-		closeSocket();
+				
 		}
+		closeSocket();
 	}
 	
 		

@@ -33,9 +33,10 @@ public class NetworkController implements Serializable, Cloneable{
 	  private User user;
 	  private ModelMessages modelM;
 	  private NetworkController nc;
-	  private HashMap<String,ModelMessages> usersList;
+	  private HashMap<String, ModelMessages> usersList;
 	  private String pseudo;
-	  private String localPhone = user.getUserPhone();
+	  //private String localPhone = user.getUserPhone();
+	  private String localPhone = "7894561232";
 	  private Timer timerCheck;
 	  
 	  //private tcp chat; line of code for the tcp
@@ -52,12 +53,11 @@ public class NetworkController implements Serializable, Cloneable{
 
 	  public NetworkController() throws IOException {
 		  this.usersList = new HashMap<String, ModelMessages>();
-		  
 		  User userLocal = null;
-		  
-		  //this.udpReceiver = new UDPReceiver();
-		  //this.udps = new UDPSender();
+		  this.udpSender = new UDPSender();
 		  this.udprThread = new Thread(this.udpReceiver);
+		  this.udpReceiver = this.getListenerThread();
+		  this.udpReceiver.start();
 		  this.udprThread.start();
 			try {
 				String ph = "338119826737";
@@ -65,10 +65,8 @@ public class NetworkController implements Serializable, Cloneable{
 			} catch (UnknownHostException e1) {
 				e1.printStackTrace();
 			}
-			this.modelM = new Model(userLocal);
+			//this.modelM = new Model(userLocal);
 			//this.cNet = new ControllerNetwork(model, interf);
-			
-			
 		  }
 	  
 	  public boolean isUserConnected() {
@@ -76,7 +74,7 @@ public class NetworkController implements Serializable, Cloneable{
 		}
 	  
 	  private UDPReceiver getListenerThread() throws SocketException {
-		  int portBroadcast = 5556;
+		  int portBroadcast = 5557;
 		  return new UDPReceiver(portBroadcast, this);
 		  
 	  }
@@ -84,35 +82,10 @@ public class NetworkController implements Serializable, Cloneable{
 	  //********Tcp listener here********
 	  
 	
-	/* when user connect, he must send a NewUserBroadcast*/
-	//@Test
-	public void NewUserBroadcast(String newPseudo) throws IOException, ClassNotFoundException {
-		// analyze the package that the controller sent
-		udpSender = new UDPSender();
-		udpSender.sendMessageBroadcast(newPseudo);
-		//udpReceiver.ReceiveMessage();
-		//InetAddress ipSrc = InetAddress.getByAddress(bytes);
-		
-		// Recuperation of the pseudo and the address to see that the reception of the Ip
-		//is ok
-		InetAddress adrSrc = udpReceiver.getAddressIp();
-		System.out.println("[cNet212] "+ newPseudo + " preuve 2");
-		System.out.println("[cNet212] "+ adrSrc.toString() + "  IP Preuve 2");
+	  
 	
-		//Test to add the user to the list, and check the fonctionality of the list
-		User userRemote = new User(newPseudo, adrSrc);
-		this.addUserRemote(userRemote);
-		nc.receivedFirstMsgHello(adrSrc, newPseudo);
-		
-		//Close of the thread and close of the sockets
-		udpReceiver.setStopThread(true);
-		udpSender.closeSocket();
-		udpReceiver.closeSocket();
-		
-	}
-	
-	public void notifyToAllUserStateUpdate(State state) {
-		System.out.println("Type of broadcast: " + state);
+	public void notifyToAllUserStateUpdate(State state) throws UnknownHostException {
+		System.out.println("[NetworkController notify] Type of broadcast: " + state);
 		String broadcast = new UDPMessage(this.pseudo).withTheStatus(state).toString();
 		udpSender.sendMessageBroadcastUDP(broadcast);
 	}
@@ -142,7 +115,15 @@ public class NetworkController implements Serializable, Cloneable{
 		
 		if (!this.usersList.containsKey(userPhone)) {
 			//ADD VERIFICATION TO ADD TO THE LIST
-			usersList.put(userPhone, new ModelMessages(newPseudo, address));
+			ModelMessages modelM = new ModelMessages(newPseudo, address);//test
+			usersList.put(userPhone, modelM);
+			usersList.put("7894561233",new ModelMessages("testPseudo", address));//test;
+			String x = modelM.getMessagePseudo();//test
+			System.out.println("[NetworkController] Users list: " + usersList);//test
+			System.out.println("[NetworkController] Model Messages, pseudoOG: " + x);//test
+			System.out.println("[NetworkController] Model Messages, list test, updated: " + usersList);//test
+			System.out.println("[NetworkController] Model Messages, same address: " + x);//test
+	
 		}
 		else {
 			//ADD VERIFICATION TO ADD TO THE LIST
@@ -165,28 +146,26 @@ public class NetworkController implements Serializable, Cloneable{
 				
 		
 		
-		public void controllerOfANewMessage(String phone, Messages message) {
+		public void controllerOfANewMessageTCP(String phone, Messages message) {
 			usersList.get(phone).addANewMessage(message);
-			
 			//INSERT LINE TO UPDATE THE USERS MESSAGES, FOR VIEW
 		}
 		
 		
-		private void sendPseudo(UDPMessage message) {
-			String pseudoMSG = new UDPMessage(pseudo).withTheStatus(State.CONNECTING).serializeMessage();
+		public void sendPseudo(UDPMessage message) throws UnknownHostException {
+			String pseudoMSG = new UDPMessage(pseudo).withTheStatus(State.CONNECTING).toString();
 			udpSender.send_MessageUDP(pseudoMSG, message.getSourceAddress());
 		}
 		
 		
-		private boolean pseudoUnicity(String pseudo, State state) {
+		private boolean pseudoUnicity(String pseudo, State state) throws UnknownHostException {
 			if (!this.getAllConnectedUsers().containsKey(pseudo)) {
 				this.pseudo = pseudo;
 				this.notifyToAllUserStateUpdate(state);
 				return true;
 			} else {
 				return false;
-			}
-			
+			}		
 		}
 
 
@@ -197,13 +176,17 @@ public class NetworkController implements Serializable, Cloneable{
 			String pseudo = message.getSourcePseudo();
 			String address = message.getSourceAddress().toString();
 
-			System.out.println("Type of broadcast: " + state);
+			System.out.println("[NetworkController] Type of broadcast: " + state);
+			System.out.println("[NetworkController] Phone of remote user: " + phone);
+			System.out.println("[NetworkController] Pseudo of remote user: " + pseudo);
+			System.out.println("[NetworkController] Address of remote user: " + address);
 			
 			if (state == State.CONNECTED) {
 				
 			}
 			if (state == State.CONNECTING) {
-				this.toUpdateOrAddUser(phone, pseudo, address);
+				this.toUpdateOrAddUser(phone, pseudo, address);//soit 1ere connexion soit modification de pseudo
+				//this.sendPseudo(message); //pour envoyer le pseudo UNIQUE en broadcast
 			}
 			if (state == State.DISCONNECTED) {
 	

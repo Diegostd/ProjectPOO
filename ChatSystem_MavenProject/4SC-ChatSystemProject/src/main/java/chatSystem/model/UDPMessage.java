@@ -6,6 +6,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.sql.Timestamp;
 import java.util.Base64;
 
@@ -21,11 +22,16 @@ public class UDPMessage implements Serializable{
 	private User user;
 	
 	
-	public UDPMessage(String pseudo) {
+	public UDPMessage(String pseudo) throws UnknownHostException {
 		// TODO Auto-generated constructor stub
+		//Se puede quitar el inetaddress
+		InetAddress localHost = InetAddress.getLocalHost();
 		this.userPseudo = pseudo;
-		this.userPhone = user.getUserPhone();
-		this.sourceAddress = user.getIp();
+		//this.userPhone = user.getUserPhone();
+		this.userPhone = "7894561231";
+		//this.sourceAddress = user.getIp();
+		this.sourceAddress = localHost;
+		//When the connection begins, timer of the pseudo
 		Timestamp timestartOfConnection = new Timestamp(System.currentTimeMillis());
 		this.timer = timestartOfConnection;
 	}
@@ -75,14 +81,16 @@ public class UDPMessage implements Serializable{
 		return this;
 	}
 
-	public String serializeMessage() {
+	public String toString() {
 		try {
 			ByteArrayOutputStream bo = new ByteArrayOutputStream();
-			String objSerialized = "";
+			String objSerialized = "test serialize";
+			//inserer code pour creer le contenu de notre objet msg
 			ObjectOutputStream so = new ObjectOutputStream(bo);
 			so.writeObject(this);
 			so.flush();
-			objSerialized = new String(Base64.getEncoder().encode(bo.toByteArray()));
+			//objSerialized.toString();
+			//objSerialized = new String(Base64.getEncoder().encode(bo.toByteArray()));
 			return objSerialized;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -90,9 +98,10 @@ public class UDPMessage implements Serializable{
 		}
 	}
 
-	public static UDPMessage deserializeMessage(String objSerialized) {
+	public static UDPMessage deserializeMessage(String msgSerialized) {
 		try {
-			byte bytes[] = Base64.getDecoder().decode(objSerialized.getBytes());
+			//byte bytes[] = Base64.getDecoder().decode(msgSerialized.getBytes());
+			byte bytes[] = msgSerialized.getBytes();
 			ByteArrayInputStream bains = new ByteArrayInputStream(bytes);
 			ObjectInputStream ois = new ObjectInputStream(bains);
 			return (UDPMessage) ois.readObject();

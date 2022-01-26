@@ -12,10 +12,12 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 
 import chatSystem.interfaces.*;
+import chatSystem.model.*;
 
 public class UDPSender implements Serializable {
 	private DatagramSocket socketSender;
 	private String hostname = "255.255.255.255"; 
+	private State state;
 	private int port = 5557; 
 	private InetAddress address;
 
@@ -32,83 +34,7 @@ public class UDPSender implements Serializable {
 			e.printStackTrace();
 		}
 	}
-	
-	//Old function to send the message
-	//Create the part of the message that we will send
-	public void sendMessage(String message, InetAddress iptosend){
-		int port = 5557;
-		byte[] buf = new byte[2048];
-
-		ByteArrayOutputStream Baos = new ByteArrayOutputStream();
-		try {
-			ObjectOutputStream oos = new ObjectOutputStream(Baos);
-			oos.writeObject(message);
-			oos.close();
-			buf=Baos.toByteArray();
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
-		DatagramPacket Messagetosend = new DatagramPacket(buf, buf.length, iptosend, port);
-
-		try {
-			this.socketSender.send(Messagetosend);
-		} catch (IOException e) {
-			System.err.println("message failed to send");
-			e.printStackTrace();
-		}
-	}
-	
-	
-	//NEW SEND MESSAGE
-	public void send_MessageNew(String messageNew, InetAddress ipsrcNew) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		try {
-            String text = messageNew;
-            System.out.println("Message que envia : " + text);
-            System.out.println("IP a donde envia : " + ipsrcNew.toString());
-            DatagramPacket outPacket = new DatagramPacket(text.getBytes(), text.length(), ipsrcNew, port);
-            socketSender.send(outPacket);
-		  } catch (IOException e) {
-				System.err.println("message failed to send");
-				e.printStackTrace();
-			}	
-	}	
-	
-	//NEW
-	public void send_Message() throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        String text="";
-        //while (!text.equals("bye")){
-        do {
-        	System.out.print("Enter something:");
-            text = br.readLine();
-            System.out.print("text: "+text);
-            DatagramPacket outPacket = new DatagramPacket(text.getBytes(), text.length(), address, port);
-            socketSender.send(outPacket);
-            //Create a buffer for incoming datagrams
-            byte[] buffer = new byte[256];
-            //Create a DatagramPacket object for the incoming datagram
-            DatagramPacket inPacket = new DatagramPacket(buffer, buffer.length);
-            //Accept an incoming datagram
-            socketSender.receive(inPacket);
-            //Retrieve the data from the buffer
-            String response = new String(inPacket.getData(), 0, inPacket.getLength());
-            System.out.println("received DATA from UDP Server = " + response);
-        }
- 
-        while (!text.equals("bye"));
-            	//Close the DatagramSocket:
-        socketSender.close();
-            
-        } /*catch (IOException e) {
-			System.err.println("message failed to send");
-			e.printStackTrace();
-		}	*/
-        
-        
-        /* while (!text.equals("bye"));
-        //Close the DatagramSocket:*/
-       
+	   
 	
 	
 	public void send_MessageUDP(String message, InetAddress IP)  {
@@ -126,25 +52,14 @@ public class UDPSender implements Serializable {
 	
 
 	public void sendMessageBroadcastUDP(String msgToSend){
-		byte[] buffer = new byte[2048];
-
-		// Here we create the packet to send into a byte array (Serialize)
-		ByteArrayOutputStream Baos = new ByteArrayOutputStream();
-		try {
-			ObjectOutputStream Oos = new ObjectOutputStream(Baos);
-			Oos.writeObject(msgToSend);
-			Oos.close();
-			buffer=Baos.toByteArray();
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
 
 		// Here we send the packet on broadcast
 		try {
+			byte[] buffer = msgToSend.getBytes();
 			//InetAddress iptosend = InetAddress.getByName("255.255.255.255");
 			DatagramPacket MSGToSend = new DatagramPacket(buffer, buffer.length, address, port);
-
 			this.socketSender.send(MSGToSend);
+			this.socketSender.close();
 		}catch (SocketException e){
 			System.err.println("java.net.SocketException: [UDPS]Socket closed");
 		}catch (UnknownHostException e1) {
@@ -156,6 +71,11 @@ public class UDPSender implements Serializable {
 		}
 	}
 
+	
+	public State getStateOfTheSender(){
+		return this.state;
+	}
+	
 	public void closeSocket(){
 		if (!this.socketSender.isClosed()){
 			this.socketSender.close();

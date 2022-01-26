@@ -11,7 +11,7 @@ import javax.swing.Timer;
 public class User implements Serializable{
 	private String username;
 	private InetAddress ip;
-	private String phone;
+	private String phone; //Phone of the user, ID UNIQUE
 	private State userState;
 	private Timer timer;
 
