@@ -19,12 +19,7 @@ import chatSystem.model.*;
 public class UDPReceiver extends Thread implements Serializable{
 	private NetworkController messageExchanged;
 	private DatagramSocket socketForReceive;
-	private UDPSender udps;
-	private UDPMessage udpm;
-	private State state;
 	private boolean running = true;
-	private EventListenerList listeners;
-	private Boolean stopThread;
 	private InetAddress addressSrc;
 	private int timeExpired = 1000;
 	//private NetworkController nc = new NetworkController();
@@ -44,61 +39,6 @@ public class UDPReceiver extends Thread implements Serializable{
 	}
 	
 	
-	//thread
-	/*public void run() {
-		byte[] buf = new byte[2048];
-		String message = null;
-
-		while(!this.stopThread){
-			// to receive a message
-			DatagramPacket packet = new DatagramPacket(buf, buf.length);
-			//String hostIP = addressSrc.getHostAddress() ;
-			
-		
-			try {
-				socketForReceive.receive(packet);
-				// unpackage to a message
-				addressSrc = packet.getAddress();
-				ByteArrayInputStream bais = new ByteArrayInputStream(packet.getData());
-				try {
-					ObjectInputStream ois = new ObjectInputStream(bais);
-					message = (String) ois.readObject();
-					
-					//We print in the console the pseudo and the IP of the user 
-					//who sent the message, where the pseudo is the message
-					System.out.println(message+" [UDPReceiver] pseudo part");
-					System.out.println(addressSrc.toString()+ "  [UDPReceiver] Ip ");
-					
-					
-					//I did this line of code because I thought that the thread did 
-					//not allow to do the other things, apparently it is not that.
-					stopThread=true;
-					
-				}
-				
-				catch (ClassNotFoundException e) {
-					e.printStackTrace();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-
-				// Inform, who wants the message
-				//this.NewReceivedMessage(packet.getAddress(), message);
-			}
-			catch (SocketException e){
-				System.err.println("java.net.SocketException: [UDPR]Socket closed");
-				this.stopThread = true;
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			
-		}
-		
-		
-	}*/
-	
-	
-	
 	public void listenerToUDPMessages() throws IOException, ClassNotFoundException {
 		System.out.println("[UDPReceiver] UPD Listener is listening");
 		String text="";
@@ -110,6 +50,7 @@ public class UDPReceiver extends Thread implements Serializable{
 				DatagramPacket inPacket = new DatagramPacket(buffer, buffer.length);
 				//receive() method blocks until a datagram is received.
 				socketForReceive.receive(inPacket);
+				
 				//Accept the sender's address and port from the packet
 				InetAddress clientAddress = inPacket.getAddress(); 
 				int clientPort = inPacket.getPort(); 
@@ -117,9 +58,10 @@ public class UDPReceiver extends Thread implements Serializable{
 				
 				//retrieve the data from the buffer
 				text = new String(inPacket.getData(), 0, inPacket.getLength()); 
-				//UDPMessage udpMessage = UDPMessage.deserializeMessage(text); Option 1
-				UDPMessage udpMessage = new UDPMessage(text); //Option 2
-				//UDPMessage udpMessage = UDPMessage.deserializeMessage(text);
+				//System.out.println("[UDPReceiver] Message received,antes : " + text);
+				//UDPMessage udpMessage = UDPMessage.deserializeMessage(text); //Option 1
+				//UDPMessage udpMessage = new UDPMessage(text); //Option 2
+				UDPMessage udpMessage = UDPMessage.deserializeMessage(text); //Option 3 
 				//State state = State.CONNECTING;
 				//udpMessage.withTheStatus();
 				System.out.println("[UDPReceiver] Message received : " + text);
@@ -128,23 +70,6 @@ public class UDPReceiver extends Thread implements Serializable{
 				}
 			} catch (SocketTimeoutException e) {	
 			}
-			
-		/*//This is for another part
-			//Check unicity
-			if (!text.equals("bye")) {
-				nc.receivedFirstMsgHello(clientAddress, text);	
-			}
-			
-			//Create the response datagram
-			if (text.equals("bye")) data = "Last message from server! ";
-			else data = "Message: " +i+ " from server";
-			buffer = data.getBytes();
-			 
-			DatagramPacket response = new DatagramPacket(buffer, buffer.length, clientAddress, clientPort);
-			socketForReceive.send(response);
-			//handle one client who can send one msg only
-			
-		} */
 				
 		}
 		closeSocket();
@@ -171,10 +96,6 @@ public class UDPReceiver extends Thread implements Serializable{
 	public InetAddress getAddressIp() {
 	     return this.addressSrc;
 	  }
-
-	public void setStopThread(Boolean stop){
-		this.stopThread = stop;
-	}
 	
 	public void closeSocket(){
 		if (!this.socketForReceive.isClosed()){

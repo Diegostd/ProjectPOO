@@ -28,16 +28,13 @@ import chatSystem.model.*;
 public class NetworkController implements Serializable, Cloneable{
 	  private UDPSender udpSender;
 	  private UDPReceiver udpReceiver;
-	  private UDPMessage udpm;
 	  private Thread udprThread;
 	  private User user;
-	  private ModelMessages modelM;
-	  private NetworkController nc;
 	  private HashMap<String, ModelMessages> usersList;
 	  private String pseudo;
 	  //private String localPhone = user.getUserPhone();
 	  private String localPhone = "7894561232";
-	  private Timer timerCheck;
+	  //private Timer timerCheck;
 	  
 	  //private tcp chat; line of code for the tcp
 	  //private Network listener listener;
@@ -153,7 +150,7 @@ public class NetworkController implements Serializable, Cloneable{
 		
 		
 		public void sendPseudo(UDPMessage message) throws UnknownHostException {
-			String pseudoMSG = new UDPMessage(pseudo).withTheStatus(State.CONNECTING).toString();
+			String pseudoMSG = new UDPMessage(pseudo).withTheStatus(State.CONNECTING).serializeMessage();
 			udpSender.send_MessageUDP(pseudoMSG, message.getSourceAddress());
 		}
 		
@@ -195,136 +192,6 @@ public class NetworkController implements Serializable, Cloneable{
 	
 			}	
 			
-		}
-			
-			
-	
-	
-	
-	//Fonction for the first message that one person send when it connects to the system
-	//The first part to check the unicity
-	public void receivedFirstMsgHello(InetAddress ipsrc, String message) throws IOException, ClassNotFoundException {
-		
-		//Recuperation of the pseudo of the person of the local machine
-		//Recuperation of the pseudo remote, the person connecting
-		//System.out.println("[conNet] "+ message + " local machine pseudo");
-		String usernameLocal = this.model.getUserLocal().getUsername();
-		String usernameRemote = message;
-		
-		System.out.println("[conNet] "+ usernameLocal + " local machine pseudo");
-		// default respond Hello not OK
-		System.out.println("[conNet] "+ usernameRemote + " is the new pseudo");
-		System.out.println("[conNet] "+ ipsrc + " IP");
-		
-		//We check the pseudo of the user that has just been connected with the local pseudo
-		if (!usernameLocal.equals(usernameRemote)){
-			System.out.println("pseudos differents");
-			// if remote username is not the same pseudo in comparaison to mine
-			//if (this.model.getUserRemoteByName(usernameRemote) == null){
-				// if remote username is valid, he is not already in my list
-				// reply Hello OK and add him in my list
-				
-				//**line of code under construction**MsgHello messageAck = new MsgHello(usernameLocal, usernameRemote, true, true);
-				//String txt = "Ok";
-				//UDPSender udpSenderr = new UDPSender(); 
-				//this.udpSender.sendMessage(txt, ipsrc);
-				//udpSenderr.sendMessage(txt, ipsrc);
-				final String remoteUsername = message;
-				User userRemote = new User(message, ipsrc);
-				this.addUserRemote(userRemote);
-				System.out.println("Agregado en teoria");
-				//String txtest = model.getUserRemoteByName(usernameRemote).toString();
-				//System.out.println("Pseudo que obtuvo en la lista: "+txtest);
-			//} else{
-				// he is in my list, do not reply
-			//}
-		} else{
-			// he has the same username as the local, reply Hello not ok
-			//**line of code under construction** MsgHello mesack = new MsgHello(usernameLocal, usernameRemote, true, false);
-			UDPSender udps = new UDPSender();
-			//String txtest = model.getUserRemoteByName(usernameRemote).toString();
-			//System.out.println("Pseudo que obtuvo en la lista: "+txtest);
-			udps.send_MessageNew("bye", ipsrc);
-			System.out.println("Pseudo not possible, try again");
-
-		}
-		
-		}
-		
-		
-		//**line of code under construction**
-		/*void sendMsgHello(){
-			System.out.println("[cNet] sendMsgHello to all");
-			MsgHello msg = new MsgHello(this.model.getUserLocal().getUsername(), "all", false, true);
-			msg.setConnect(true);//hello
-			this.udps.sendMessBroadcast(msg);
-			this.writeAndDisplayLogLine("User sended Hello\n");
-		}*/
-	
-	
-		//Fonction to add the user
-		private void addUserRemote(User userRemote) throws IOException, ClassNotFoundException{
-			this.model.addUserRemote(userRemote);
-			
-			//SAVE OF THE LIST **under construction**
-			/*//System.out.println("[Model]List of remoteUsers:"+this.userList.toString());
-			@SuppressWarnings("unchecked")
-			DefaultListModel<ModelUserList> list = model.getRemoteUsers();
-			//DefaultListModel<ModelUserList> copy = new ArrayList<>(Model.userList);
-			//ArrayList<String> usersListCopy = (ArrayList<String>) list.cln();
-			FileOutputStream fos = new FileOutputStream("/C:/UsersList.tmp");
-			ObjectOutputStream oos = new ObjectOutputStream(fos);
-			oos.writeObject(list);
-			oos.close();
-			FileInputStream fis = new FileInputStream("/C:/UsersList.tmp");
-			ObjectInputStream ois = new ObjectInputStream(fis);
-			@SuppressWarnings("unchecked")
-			DefaultListModel<ModelUserList> userLists= (DefaultListModel<ModelUserList>) ois.readObject();
-			DefaultListModel<ModelUserList> usrsLits = userLists;
-			System.out.println("[cNet] User List saved: "+usrsLits);
-			ois.close();*/
-			
-			//**line of code under construction** this.interf.getDefaultListModel().addElement(userRemote.getUsername());
-		}
-	
-		//Fonction to check if a timer has expired, is under construction aswell
-		public void aTimerHasExpired(String remoteUsername) {
-			System.out.println("[cNet] User "+ remoteUsername + "'s timer has expired");
-			User userRemote = this.model.getUserRemoteByName(remoteUsername);
-			if (userRemote != null){
-				userRemote.stopTimer();
-				this.model.removeUserRemote(userRemote);
-			}
-		}
-		
-		//Fonction to see if the timer of the local machine has expired, is under contstruction
-		//This timer helps us to see the timer of the local user to see 
-		//if he has not received a message with the same pseudo
-		private void timerUserLocalHasExpired(){
-			this.model.getUserLocal().stopTimer();
-			if (this.model.getUserLocal().getState() == State.CONNECTING){
-				//this.timerCheck.start();
-				this.model.getUserLocal().setState(State.CONNECTED);
-				System.out.println("[Controller] It is connected");
-				//this.interf.setUIConnected();
-			}else{
-				//disconnected
-				//this.vue.setUIDisconnected();
-			}
-		}
-		
-		//Fonction under construction, It is supposed to send a message 
-		//saying that the timer has expired
-		private void timerCheckHasExpired(){
-			this.nc.sendMsgCheck();
-		}
-		
-		//It is the fonction to send a "check" message to all
-		//It serves to verify that the pseudo of the list is correct
-		void sendMsgCheck(){
-			System.out.println("[cNet] sendMsgCheck to all");
-			//MsgCheck msg = new MsgCheck(this.model.getUserLocal().getUsername(), "all", false);
-			//this.udpSender.sendMessBroadcast(msg);
 		}
 	
 

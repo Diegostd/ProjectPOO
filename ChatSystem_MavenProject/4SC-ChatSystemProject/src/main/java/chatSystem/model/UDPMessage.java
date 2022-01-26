@@ -1,14 +1,13 @@
 package chatSystem.model;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.sql.Timestamp;
-import java.util.Base64;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
 public class UDPMessage implements Serializable{
@@ -19,7 +18,6 @@ public class UDPMessage implements Serializable{
 	private String userPseudo;
 	private String userPhone;
 	private InetAddress sourceAddress;
-	private User user;
 	
 	
 	public UDPMessage(String pseudo) throws UnknownHostException {
@@ -81,30 +79,67 @@ public class UDPMessage implements Serializable{
 		return this;
 	}
 
-	public String toString() {
+	public String serializeMessage() {
 		try {
-			ByteArrayOutputStream bo = new ByteArrayOutputStream();
-			String objSerialized = "test serialize";
+			String objSerialized = "hello";
+			State state = getState();
+			System.out.println("[UDPMessage, serialize] State is: "+ state);//test
+			String str = state+"@"+objSerialized;//test
+			String[] split = str.split("@"); //test	
+			String s = Stream.of(split).collect(Collectors.joining("@"));
+			for (int i = 0; i<split.length; i++) {//test
+				 System.out.println(split[i]);//test
+			}//test
+			System.out.println("[UDPMessage, serialize] Array splited: "+split);//test
+			System.out.println("[UDPMessage, serialize] Array joined again: "+s);//test
 			//inserer code pour creer le contenu de notre objet msg
-			ObjectOutputStream so = new ObjectOutputStream(bo);
-			so.writeObject(this);
-			so.flush();
-			//objSerialized.toString();
-			//objSerialized = new String(Base64.getEncoder().encode(bo.toByteArray()));
-			return objSerialized;
+			ByteArrayOutputStream out = new ByteArrayOutputStream();
+		    ObjectOutputStream outputStream = new ObjectOutputStream(out);
+		    outputStream.writeObject(s);
+		    outputStream.flush();
+		    outputStream.close();
+		    byte[] bytes = out.toByteArray();
+		    String msg = new String(out.toByteArray());
+		    System.out.println("[UDPMessage, serialized msg to send: "+msg);//test
+		    //byte[] listData = out.toByteArray();
+			return s;
 		} catch (Exception e) {
 			e.printStackTrace();
-			return "";
+			return null;
 		}
 	}
 
-	public static UDPMessage deserializeMessage(String msgSerialized) {
+	public static UDPMessage deserializeMessage(String text) {
 		try {
-			//byte bytes[] = Base64.getDecoder().decode(msgSerialized.getBytes());
-			byte bytes[] = msgSerialized.getBytes();
+			/*byte bytes[] = text.getBytes();
+			ObjectInputStream inputStream = new ObjectInputStream(new ByteArrayInputStream(bytes));//test
+			String msg = (String)inputStream.readObject();*/
+			String[] split = text.split("@");
+			for (int i = 0; i<split.length; i++) {//test
+				 System.out.println(split[i]);//test
+			}//test
+			//System.out.println("[UDPMessage, deserialized msg to send: "+text);//test
+			String test =split[0];//test
+			System.out.println("[UDPMessage, deserialized msg to send, test state:"+test);//
+			UDPMessage aReturner = new UDPMessage("dd");
+			return aReturner;//test*/	
+			
+			
+			//Array list = (Array) inputStream.readObject();//test*/
+		    //UDPMessage msg = new UDPMessage(list);
+		    /*for (int i = 0; i<list.length; i++) {//test
+				 System.out.println(list[i]);//test
+			}//test
+			System.out.println("[UDPMessage] Array deserialized: "+list);//test
+			
+			/*byte bytes[] = msgSerialized.getBytes();
 			ByteArrayInputStream bains = new ByteArrayInputStream(bytes);
 			ObjectInputStream ois = new ObjectInputStream(bains);
-			return (UDPMessage) ois.readObject();
+			return (UDPMessage) ois.readObject();*/
+			
+			//String pseudo = split[1];
+			
+		    //return (UDPMessage) list;
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new UDPMessage();
