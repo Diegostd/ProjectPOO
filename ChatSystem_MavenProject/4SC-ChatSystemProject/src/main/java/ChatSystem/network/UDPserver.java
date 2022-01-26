@@ -50,6 +50,9 @@ import java.net.SocketException;
 			servSocket.close();
 		}
 		
+		
+		
+		
 		public void run() {
 			try {
 				receive_msg();

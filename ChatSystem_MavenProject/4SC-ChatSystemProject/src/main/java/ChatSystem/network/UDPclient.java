@@ -33,6 +33,7 @@ public class UDPclient {
 	
 	}
 	
+	//méthode pour pouvoir tester en console
 	public void send_Message() throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         String text;
@@ -55,8 +56,36 @@ public class UDPclient {
             //Retrieve the data from the buffer
             String response = new String(inPacket.getData(), 0, inPacket.getLength());
             System.out.println("received DATA from UDP Server = " + response); 
-           
- 
+            
+        } while (!text.equals("bye"));
+        //Close the DatagramSocket:
+        dgramSocket.close();
+	}	
+	
+	
+	//déclinaison du code pour prendre en argument le message à envoyer 
+	public void send_Msg() throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        String text;
+        System.out.println(address); 
+   
+        do {
+        	System.out.print("Enter something:");
+            text = br.readLine();
+            DatagramPacket outPacket = new DatagramPacket(text.getBytes(), text.length(), address, port);     
+      
+            System.out.println("le paquet" + outPacket.getData() +" "+outPacket.getLength()); 
+            dgramSocket.send(outPacket);
+                   
+            //Create a buffer for incoming datagrams
+            byte[] buffer = new byte[256];
+            //Create a DatagramPacket object for the incoming datagram
+            DatagramPacket inPacket = new DatagramPacket(buffer, buffer.length);
+            //Accept an incoming datagram
+            dgramSocket.receive(inPacket);
+            //Retrieve the data from the buffer
+            String response = new String(inPacket.getData(), 0, inPacket.getLength());
+            System.out.println("received DATA from UDP Server = " + response); 
             
         } while (!text.equals("bye"));
         //Close the DatagramSocket:

@@ -17,7 +17,7 @@
     <DEPENDENCIES>
       <COMP relation="OwnedOperation">
         <OBJECT>
-          <ID name="ProcessInterfaceSignal" mc="Standard.Operation" uid="4cf61e2a-770e-494a-9687-620a7ee8904c"/>
+          <ID name="HandleInterfaceWindows" mc="Standard.Operation" uid="4cf61e2a-770e-494a-9687-620a7ee8904c"/>
           <ATTRIBUTES>
             <ATT name="Concurrency">false</ATT>
             <ATT name="Final">false</ATT>
@@ -25,13 +25,13 @@
             <ATT name="Visibility">Public</ATT>
             <ATT name="IsClass">false</ATT>
             <ATT name="IsAbstract">false</ATT>
-            <ATT name="Name"><![CDATA[ProcessInterfaceSignal]]></ATT>
+            <ATT name="Name"><![CDATA[HandleInterfaceWindows]]></ATT>
             <ATT name="status">1970354901745664</ATT>
           </ATTRIBUTES>
           <DEPENDENCIES></DEPENDENCIES>
         </OBJECT>
         <OBJECT>
-          <ID name="Process_CS_signal" mc="Standard.Operation" uid="233278ef-8a0e-47af-a686-75afd168288d"/>
+          <ID name="CheckPseudoUnicity" mc="Standard.Operation" uid="233278ef-8a0e-47af-a686-75afd168288d"/>
           <ATTRIBUTES>
             <ATT name="Concurrency">false</ATT>
             <ATT name="Final">false</ATT>
@@ -39,13 +39,13 @@
             <ATT name="Visibility">Public</ATT>
             <ATT name="IsClass">false</ATT>
             <ATT name="IsAbstract">false</ATT>
-            <ATT name="Name"><![CDATA[Process_CS_signal]]></ATT>
+            <ATT name="Name"><![CDATA[CheckPseudoUnicity]]></ATT>
             <ATT name="status">1970354901745664</ATT>
           </ATTRIBUTES>
           <DEPENDENCIES></DEPENDENCIES>
         </OBJECT>
         <OBJECT>
-          <ID name="Create_notification_signal" mc="Standard.Operation" uid="8ebade81-78ee-471a-af8e-8704ea339925"/>
+          <ID name=" ProcessMessagesFlow" mc="Standard.Operation" uid="5903fb1d-d193-49b1-919e-7257339c824f"/>
           <ATTRIBUTES>
             <ATT name="Concurrency">false</ATT>
             <ATT name="Final">false</ATT>
@@ -53,21 +53,35 @@
             <ATT name="Visibility">Public</ATT>
             <ATT name="IsClass">false</ATT>
             <ATT name="IsAbstract">false</ATT>
-            <ATT name="Name"><![CDATA[Create_notification_signal]]></ATT>
+            <ATT name="Name"><![CDATA[ ProcessMessagesFlow]]></ATT>
             <ATT name="status">1970354901745664</ATT>
           </ATTRIBUTES>
           <DEPENDENCIES></DEPENDENCIES>
         </OBJECT>
         <OBJECT>
-          <ID name="+ ProcessMessagesFlow ()" mc="Standard.Operation" uid="5903fb1d-d193-49b1-919e-7257339c824f"/>
+          <ID name="RegisterUserInfoInBDD" mc="Standard.Operation" uid="d02c0ba0-8b05-4986-a664-5d2debaedc4d"/>
           <ATTRIBUTES>
             <ATT name="Concurrency">false</ATT>
             <ATT name="Final">false</ATT>
             <ATT name="Passing">MethodOut</ATT>
-            <ATT name="Visibility">Public</ATT>
+            <ATT name="Visibility">Private</ATT>
             <ATT name="IsClass">false</ATT>
             <ATT name="IsAbstract">false</ATT>
-            <ATT name="Name"><![CDATA[+ ProcessMessagesFlow ()]]></ATT>
+            <ATT name="Name"><![CDATA[RegisterUserInfoInBDD]]></ATT>
+            <ATT name="status">1970354901745664</ATT>
+          </ATTRIBUTES>
+          <DEPENDENCIES></DEPENDENCIES>
+        </OBJECT>
+        <OBJECT>
+          <ID name="ArchiveMsgInBDD" mc="Standard.Operation" uid="317fdf6d-7ef7-460a-97d6-215d7d6b6ce8"/>
+          <ATTRIBUTES>
+            <ATT name="Concurrency">false</ATT>
+            <ATT name="Final">false</ATT>
+            <ATT name="Passing">MethodOut</ATT>
+            <ATT name="Visibility">Private</ATT>
+            <ATT name="IsClass">false</ATT>
+            <ATT name="IsAbstract">false</ATT>
+            <ATT name="Name"><![CDATA[ArchiveMsgInBDD]]></ATT>
             <ATT name="status">1970354901745664</ATT>
           </ATTRIBUTES>
           <DEPENDENCIES></DEPENDENCIES>
