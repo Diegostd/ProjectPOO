@@ -21,18 +21,20 @@ public class UDPMessage implements Serializable{
 	private User user;
 	
 	//Il faut changer 
-	public UDPMessage(String pseudo) throws UnknownHostException {
+	public UDPMessage(User user) throws UnknownHostException {
 		// TODO Auto-generated constructor stub
 		//Se puede quitar el inetaddress
-		InetAddress localHost = InetAddress.getLocalHost();
-		this.userPseudo = pseudo;
-		//this.userPhone = user.getUserPhone();
-		this.userPhone = "7894561231";
+		InetAddress localHost = user.getIp();
+		this.userPseudo = user.getUsername();
+		this.userPhone = user.getUserPhone();
+		this.user = user;
+		//this.userPhone = "7894561231";
 		//this.sourceAddress = user.getIp();
 		this.sourceAddress = localHost;
 		//When the connection begins, timer of the pseudo
 		Timestamp timestartOfConnection = new Timestamp(System.currentTimeMillis());
 		this.timer = timestartOfConnection;
+		this.status = user.getState();
 	}
 	
 	private UDPMessage() {
@@ -40,7 +42,9 @@ public class UDPMessage implements Serializable{
 
 	
 	//Functions for the UDPMessage
-
+	public User getUser() {
+		return this.user;
+	}
 	public UDPMessage getMessageContent(String message) {
 		this.message = message;
 		return this;
@@ -82,11 +86,13 @@ public class UDPMessage implements Serializable{
 
 	public String serializeMessage() {
 		try {
-			String objSerialized = "hello";
+			String objSerialized = userPseudo;
 			State state = getState();
+			String phone = userPhone;
 			System.out.println("[UDPMessage, serialize] State is: "+ state);//test
+			System.out.println("[UDPMessage, serialize] phone is: "+ phone);//test
 			//Sequence de concatenation des champs d'un msg udp : state - pseudo - 
-			String str = state+"@"+objSerialized;//test
+			String str = state+"@"+objSerialized+"@"+phone;//test
 			String[] split = str.split("@"); //test	
 			String s = Stream.of(split).collect(Collectors.joining("@"));
 			for (int i = 0; i<split.length; i++) {//test
@@ -115,9 +121,12 @@ public class UDPMessage implements Serializable{
 			//System.out.println("[UDPMessage, deserialized msg to send: "+text);//test
 			String state =split[0];//test
 			String pseudo = split[1];
+			String phone = split[2];
 			State stateOfMsg = State.valueOf(state);
 			System.out.println("[UDPMessage, deserialized received, test state):"+state);//
-			UDPMessage aReturner = new UDPMessage(pseudo).withTheStatus(stateOfMsg);
+			InetAddress addressSource = InetAddress.getLocalHost(); 
+			User usr = new User(pseudo, addressSource, phone);
+			UDPMessage aReturner = new UDPMessage(usr).withTheStatus(stateOfMsg);
 			return aReturner;//test*/	
 			//Array list = (Array) inputStream.readObject();//test*/
 		    //UDPMessage msg = new UDPMessage(list);

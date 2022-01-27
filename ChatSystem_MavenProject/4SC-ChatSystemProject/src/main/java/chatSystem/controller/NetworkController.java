@@ -52,6 +52,7 @@ public class NetworkController implements Serializable, Cloneable{
 		  this.usersList = new HashMap<String, ModelMessages>();
 		  User userLocal = null;
 		  this.udpSender = new UDPSender();
+		  this.user = new User(null, null, null);
 		  this.udprThread = new Thread(this.udpReceiver);
 		  this.udpReceiver = this.getListenerThread();
 		  this.udpReceiver.start();
@@ -79,10 +80,10 @@ public class NetworkController implements Serializable, Cloneable{
 		}
 	  
 	  private UDPReceiver getListenerThread() throws SocketException {
-		  int portBroadcast = 5557;
-		  return new UDPReceiver(portBroadcast, this);
-		  
+		  int portBroadcast = 5558;
+		  return new UDPReceiver(portBroadcast, this);  
 	  }
+	  
 	  
 	  //********Tcp listener here********
 	  
@@ -91,7 +92,8 @@ public class NetworkController implements Serializable, Cloneable{
 	
 	public void notifyToAllUserStateUpdate(State state) throws UnknownHostException {
 		System.out.println("[NetworkController notify] Type of broadcast: " + state);
-		String broadcast = new UDPMessage(this.pseudo).withTheStatus(state).serializeMessage();
+		User usr = new User (this.pseudo,InetAddress.getLocalHost(),this.getUserPhoneByPseudo(pseudo));
+		String broadcast = new UDPMessage(usr).withTheStatus(state).serializeMessage();
 		udpSender.sendMessageBroadcastUDP(broadcast);
 	}
 	
@@ -116,6 +118,7 @@ public class NetworkController implements Serializable, Cloneable{
 	public void toUpdateOrAddUser(String userPhone, String newPseudo, String address) throws IOException {
 		
 		if (userPhone.equals(localPhone)) {
+			System.out.println("SAME TELEPHONE" + usersList);//test
 			return;
 		}
 		
@@ -160,11 +163,21 @@ public class NetworkController implements Serializable, Cloneable{
 		
 		
 		public void sendPseudo(UDPMessage message) throws UnknownHostException {
-			String pseudoMSG = new UDPMessage(pseudo).withTheStatus(State.CONNECTING).serializeMessage();
+			User urs = message.getUser();
+			String pseudo = getPseudo();
+			InetAddress ip = getIp();
+			String phone = user.getUserPhone();
+			User usr = new User(pseudo,ip,phone);
+			String pseudoMSG = new UDPMessage(urs).withTheStatus(State.CONNECTING).serializeMessage();
 			udpSender.send_MessageUDP(pseudoMSG, message.getSourceAddress());
 		}
 		
 		
+		private InetAddress getIp() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
 		private boolean pseudoUnicity(String pseudo, State state) throws UnknownHostException {
 			if (!this.getAllConnectedUsers().containsKey(pseudo)) {
 				this.pseudo = pseudo;

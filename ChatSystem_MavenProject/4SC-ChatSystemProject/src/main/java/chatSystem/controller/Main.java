@@ -18,7 +18,7 @@ public class Main {
 			InetAddress localHost = InetAddress.getLocalHost();
 			User user = new User("toto", localHost, "7894561231");
 			//UDPMessage msg = new UDPMessage("toto");
-			UDPMessage udpm = new UDPMessage("hello");
+			UDPMessage udpm = new UDPMessage(user);
 			final NetworkController messagesExchanged = new NetworkController();
 			//controlGUI controlgui = new controlGUI();
 			//nc.NewUserBroadcast("titi");
