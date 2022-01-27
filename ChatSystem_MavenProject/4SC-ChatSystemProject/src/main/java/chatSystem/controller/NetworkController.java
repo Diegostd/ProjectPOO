@@ -66,6 +66,14 @@ public class NetworkController implements Serializable, Cloneable{
 			//this.cNet = new ControllerNetwork(model, interf);
 		  }
 	  
+	  public String getPseudo() {
+			return this.pseudo;
+		}
+	  
+	  /*public void setViewOfTheChat() {
+			this.chatView = new ChatView(this);
+		}*/
+	  
 	  public boolean isUserConnected() {
 			return user.getIp() != null;
 		}
@@ -83,7 +91,7 @@ public class NetworkController implements Serializable, Cloneable{
 	
 	public void notifyToAllUserStateUpdate(State state) throws UnknownHostException {
 		System.out.println("[NetworkController notify] Type of broadcast: " + state);
-		String broadcast = new UDPMessage(this.pseudo).withTheStatus(state).toString();
+		String broadcast = new UDPMessage(this.pseudo).withTheStatus(state).serializeMessage();
 		udpSender.sendMessageBroadcastUDP(broadcast);
 	}
 	
@@ -96,6 +104,7 @@ public class NetworkController implements Serializable, Cloneable{
 		}
 		return pseudos;
 		}
+	
 	
 	public String getUserPhoneByPseudo(String pseudo) {
 		HashMap<String, String> users = getAllConnectedUsers();
@@ -114,12 +123,13 @@ public class NetworkController implements Serializable, Cloneable{
 			//ADD VERIFICATION TO ADD TO THE LIST
 			ModelMessages modelM = new ModelMessages(newPseudo, address);//test
 			usersList.put(userPhone, modelM);
+			System.out.println("[NetworkController] Users list, OG: " + usersList);//test
 			usersList.put("7894561233",new ModelMessages("testPseudo", address));//test;
 			String x = modelM.getMessagePseudo();//test
 			System.out.println("[NetworkController] Users list: " + usersList);//test
 			System.out.println("[NetworkController] Model Messages, pseudoOG: " + x);//test
 			System.out.println("[NetworkController] Model Messages, list test, updated: " + usersList);//test
-			System.out.println("[NetworkController] Model Messages, same address: " + x);//test
+			System.out.println("[NetworkController] Model Messages, same address: " + address);//test
 	
 		}
 		else {
@@ -179,17 +189,21 @@ public class NetworkController implements Serializable, Cloneable{
 			System.out.println("[NetworkController] Address of remote user: " + address);
 			
 			if (state == State.CONNECTED) {
-				
+				this.toUpdateOrAddUser(phone, pseudo, address);
 			}
 			if (state == State.CONNECTING) {
 				this.toUpdateOrAddUser(phone, pseudo, address);//soit 1ere connexion soit modification de pseudo
 				//this.sendPseudo(message); //pour envoyer le pseudo UNIQUE en broadcast
 			}
+			if (state == State.OLDUSER) {
+				this.toUpdateOrAddUser(phone, pseudo, address);
+				this.sendPseudo(message);
+			}
 			if (state == State.DISCONNECTED) {
-	
+				this.removeUserForDisconnection(phone);
 			}
 			if (state == State.UPDATE) {
-	
+				this.toUpdateOrAddUser(phone, pseudo, address);
 			}	
 			
 		}

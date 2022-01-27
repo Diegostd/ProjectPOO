@@ -18,8 +18,9 @@ public class UDPMessage implements Serializable{
 	private String userPseudo;
 	private String userPhone;
 	private InetAddress sourceAddress;
+	private User user;
 	
-	
+	//Il faut changer 
 	public UDPMessage(String pseudo) throws UnknownHostException {
 		// TODO Auto-generated constructor stub
 		//Se puede quitar el inetaddress
@@ -84,6 +85,7 @@ public class UDPMessage implements Serializable{
 			String objSerialized = "hello";
 			State state = getState();
 			System.out.println("[UDPMessage, serialize] State is: "+ state);//test
+			//Sequence de concatenation des champs d'un msg udp : state - pseudo - 
 			String str = state+"@"+objSerialized;//test
 			String[] split = str.split("@"); //test	
 			String s = Stream.of(split).collect(Collectors.joining("@"));
@@ -93,14 +95,6 @@ public class UDPMessage implements Serializable{
 			System.out.println("[UDPMessage, serialize] Array splited: "+split);//test
 			System.out.println("[UDPMessage, serialize] Array joined again: "+s);//test
 			//inserer code pour creer le contenu de notre objet msg
-			ByteArrayOutputStream out = new ByteArrayOutputStream();
-		    ObjectOutputStream outputStream = new ObjectOutputStream(out);
-		    outputStream.writeObject(s);
-		    outputStream.flush();
-		    outputStream.close();
-		    byte[] bytes = out.toByteArray();
-		    String msg = new String(out.toByteArray());
-		    System.out.println("[UDPMessage, serialized msg to send: "+msg);//test
 		    //byte[] listData = out.toByteArray();
 			return s;
 		} catch (Exception e) {
@@ -119,12 +113,12 @@ public class UDPMessage implements Serializable{
 				 System.out.println(split[i]);//test
 			}//test
 			//System.out.println("[UDPMessage, deserialized msg to send: "+text);//test
-			String test =split[0];//test
-			System.out.println("[UDPMessage, deserialized msg to send, test state:"+test);//
-			UDPMessage aReturner = new UDPMessage("dd");
+			String state =split[0];//test
+			String pseudo = split[1];
+			State stateOfMsg = State.valueOf(state);
+			System.out.println("[UDPMessage, deserialized received, test state):"+state);//
+			UDPMessage aReturner = new UDPMessage(pseudo).withTheStatus(stateOfMsg);
 			return aReturner;//test*/	
-			
-			
 			//Array list = (Array) inputStream.readObject();//test*/
 		    //UDPMessage msg = new UDPMessage(list);
 		    /*for (int i = 0; i<list.length; i++) {//test

@@ -8,6 +8,8 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import java.awt.GridBagLayout;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import javax.swing.JTextField;
@@ -18,7 +20,10 @@ import java.net.UnknownHostException;
 
 import chatSystem.controller.NetworkController;
 import chatSystem.controller.UDPSender;
+import chatSystem.model.State;
+import chatSystem.model.UDPMessage;
 import chatSystem.controller.UDPReceiver;
+import chatSystem.controller.*;
 
 public class ConnexionWindow extends JFrame {
 
@@ -50,7 +55,8 @@ public class ConnexionWindow extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public ConnexionWindow() {
+	public ConnexionWindow(NetworkController networkController) {
+		this.ntcon = networkController;
 		//JFrame frame = new JFrame();
 		//JFrame frame = new JFrame();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -109,37 +115,18 @@ public class ConnexionWindow extends JFrame {
 		JButton btnLogin = new JButton("Login");
 		btnLogin.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				//boolean pseudoOk=myNetworkComtoller();
-				//if pseudOk -- fermer la fen actuelle et ouvrir la fen principale
-				// if psudoOk est egale a false -- afficher ds un JText un msg d erreur
-				String pseudoOk=textPseudo.getText();
-				ntcon = new NetworkController();
-				udpSender = new UDPSender();
-				udpReceiver = new UDPReceiver();
-				if(ntcon.testPseudo(pseudoOk)== true) {
-					//Close current window and open mainwindow
-					System.out.println("ok");
-					try {
-						ntcon.NewUserBroadcast(pseudoOk);
-					} catch (UnknownHostException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-					//only to check the sended string System.out.println(pseudoOk);
-					/*udpSender.sendPseudosBroadcast(pseudoOk);
-					udpReceiver.ReceiveMessage();
-					udpReceiver.setStopThread(true);
-					udpSender.closeSocket();
-					udpReceiver.closeSocket();*/
-					
-					dispose();
-					MainWindow mw = new MainWindow();
-					mw.setVisible(true);
-					
-				}
-				else {
-					System.out.println("pas ok");
-				}
+				String textIntroduced;
+				textIntroduced = textPseudo.getText();
+		        if (!this.ntcon.isUserConnected) {
+		            JOptionPane.showMessageDialog(btnLogin, "Error in the network");
+		        }
+
+		        if (!textIntroduced.isBlank() && this.ntcon.PseudoUnicity(textIntroduced, State.CONNECTING)) {
+		            dispose();
+		            this.ntcon.setChatView();
+		        } else {
+		            JOptionPane.showMessageDialog(btnLogin, "Try again with another pseudo");
+		        }
 			}
 		});
 		
