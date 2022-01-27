@@ -80,7 +80,7 @@ public class NetworkController implements Serializable, Cloneable{
 		}
 	  
 	  private UDPReceiver getListenerThread() throws SocketException {
-		  int portBroadcast = 5558;
+		  int portBroadcast = 5556;
 		  return new UDPReceiver(portBroadcast, this);  
 	  }
 	  
@@ -164,11 +164,9 @@ public class NetworkController implements Serializable, Cloneable{
 		
 		public void sendPseudo(UDPMessage message) throws UnknownHostException {
 			User urs = message.getUser();
-			String pseudo = getPseudo();
-			InetAddress ip = getIp();
-			String phone = user.getUserPhone();
-			User usr = new User(pseudo,ip,phone);
 			String pseudoMSG = new UDPMessage(urs).withTheStatus(State.CONNECTING).serializeMessage();
+			System.out.println("[NetworkController] Pseudo to send, in the method sendPseudo: " + pseudoMSG);//
+			System.out.println("[NetworkController] Address to send, in the method sendPseudo: " + message.getSourceAddress());//		
 			udpSender.send_MessageUDP(pseudoMSG, message.getSourceAddress());
 		}
 		

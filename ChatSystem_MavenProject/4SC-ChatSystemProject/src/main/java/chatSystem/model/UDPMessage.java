@@ -145,6 +145,7 @@ public class UDPMessage implements Serializable{
 		    //return (UDPMessage) list;
 		} catch (Exception e) {
 			e.printStackTrace();
+			System.out.println("[UDPMessage error");//
 			return new UDPMessage();
 		}
 	}

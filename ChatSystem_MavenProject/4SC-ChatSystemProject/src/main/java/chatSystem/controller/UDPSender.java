@@ -18,7 +18,7 @@ public class UDPSender implements Serializable {
 	private DatagramSocket socketSender;
 	private String hostname = "255.255.255.255"; 
 	private State state;
-	private int port = 5557; 
+	private int port = 5556; 
 	private InetAddress address;
 
 
@@ -44,6 +44,7 @@ public class UDPSender implements Serializable {
 			DatagramPacket pck = new DatagramPacket(buffer, buffer.length, address, port);
 			socketSender.send(pck);
 			socketSender.close();
+			System.out.println("Mensaje enviado en teoria");
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println("Exception in sending the UDP message");
