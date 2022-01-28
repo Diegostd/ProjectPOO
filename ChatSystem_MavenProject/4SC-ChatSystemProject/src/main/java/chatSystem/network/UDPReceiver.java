@@ -71,7 +71,7 @@ public class UDPReceiver extends Thread implements Serializable{
 					this.messageExchanged.newReceivedBroadcastMessage(udpMessage);
 				}
 				else {
-					System.out.println("[UDPReceiver] Same ID, same telephone");
+					System.out.println("[UDPReceiver] Same ID, same telephone, so he will not add himself to the list");
 				}
 			} catch (SocketTimeoutException e) {	
 			}

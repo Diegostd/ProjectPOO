@@ -113,7 +113,7 @@ public class UDPMessage implements Serializable{
 			String pseudo = split[1];
 			String phone = split[2];
 			State stateOfMsg = State.valueOf(state);
-			System.out.println("[UDPMessage, deserialized received, test state):"+state);//
+			System.out.println("[UDPMessage], deserialized received, test state:"+state);//
 			InetAddress addressSource = InetAddress.getLocalHost(); 
 			User usr = new User(pseudo, addressSource, phone);
 			UDPMessage aReturner = new UDPMessage(usr).withTheStatus(stateOfMsg);
