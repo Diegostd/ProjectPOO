@@ -19,21 +19,20 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Timer;
-
 import javax.swing.DefaultListModel;
-
 import chatSystem.interfaces.*;
 import chatSystem.model.*;
 
 public class NetworkController implements Serializable, Cloneable{
 	  private UDPSender udpSender;
 	  private UDPReceiver udpReceiver;
+	  private MainWindow mainWindow = null;
 	  private Thread udprThread;
 	  private User user;
 	  private HashMap<String, ModelMessages> usersList;
 	  private String pseudo;
 	  //private String localPhone = user.getUserPhone();
-	  private String localPhone = "7894561232";
+	  private String localPhone;
 	  //private Timer timerCheck;
 	  
 	  //private tcp chat; line of code for the tcp
@@ -75,9 +74,14 @@ public class NetworkController implements Serializable, Cloneable{
 			this.chatView = new ChatView(this);
 		}*/
 	  
-	  public boolean isUserConnected() {
-			return user.getIp() != null;
+	  public boolean isUserConnected() throws UnknownHostException {
+			return InetAddress.getLocalHost() != null;
 		}
+	  
+	  public void setMainWindow() {
+			this.mainWindow = new MainWindow(this).setVisible(true);
+		}
+
 	  
 	  private UDPReceiver getListenerThread() throws SocketException {
 		  int portBroadcast = 5556;
@@ -92,7 +96,7 @@ public class NetworkController implements Serializable, Cloneable{
 	
 	public void notifyToAllUserStateUpdate(State state) throws UnknownHostException {
 		System.out.println("[NetworkController notify] Type of broadcast: " + state);
-		User usr = new User (this.pseudo,InetAddress.getLocalHost(),this.getUserPhoneByPseudo(pseudo));
+		User usr = new User (this.pseudo,InetAddress.getLocalHost(),this.localPhone);
 		String broadcast = new UDPMessage(usr).withTheStatus(state).serializeMessage();
 		udpSender.sendMessageBroadcastUDP(broadcast);
 	}
@@ -124,6 +128,8 @@ public class NetworkController implements Serializable, Cloneable{
 		
 		if (!this.usersList.containsKey(userPhone)) {
 			//ADD VERIFICATION TO ADD TO THE LIST
+			System.out.println("[NetworkController] He is entering to the list, because he is not already in the list");//test
+			
 			ModelMessages modelM = new ModelMessages(newPseudo, address);//test
 			usersList.put(userPhone, modelM);
 			System.out.println("[NetworkController] Users list, OG: " + usersList);//test
@@ -176,9 +182,10 @@ public class NetworkController implements Serializable, Cloneable{
 			return null;
 		}
 
-		private boolean pseudoUnicity(String pseudo, State state) throws UnknownHostException {
+		public boolean pseudoUnicity(String pseudo, State state, String phone) throws UnknownHostException {
 			if (!this.getAllConnectedUsers().containsKey(pseudo)) {
 				this.pseudo = pseudo;
+				this.localPhone = phone;
 				this.notifyToAllUserStateUpdate(state);
 				return true;
 			} else {
@@ -206,7 +213,7 @@ public class NetworkController implements Serializable, Cloneable{
 				this.toUpdateOrAddUser(phone, pseudo, address);//soit 1ere connexion soit modification de pseudo
 				//this.sendPseudo(message); //pour envoyer le pseudo UNIQUE en broadcast
 			}
-			if (state == State.OLDUSER) {
+			if (state == State.UNKNOWN) { //this is for testing
 				this.toUpdateOrAddUser(phone, pseudo, address);
 				this.sendPseudo(message);
 			}

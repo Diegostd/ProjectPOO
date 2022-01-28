@@ -128,21 +128,6 @@ public class UDPMessage implements Serializable{
 			User usr = new User(pseudo, addressSource, phone);
 			UDPMessage aReturner = new UDPMessage(usr).withTheStatus(stateOfMsg);
 			return aReturner;//test*/	
-			//Array list = (Array) inputStream.readObject();//test*/
-		    //UDPMessage msg = new UDPMessage(list);
-		    /*for (int i = 0; i<list.length; i++) {//test
-				 System.out.println(list[i]);//test
-			}//test
-			System.out.println("[UDPMessage] Array deserialized: "+list);//test
-			
-			/*byte bytes[] = msgSerialized.getBytes();
-			ByteArrayInputStream bains = new ByteArrayInputStream(bytes);
-			ObjectInputStream ois = new ObjectInputStream(bains);
-			return (UDPMessage) ois.readObject();*/
-			
-			//String pseudo = split[1];
-			
-		    //return (UDPMessage) list;
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println("[UDPMessage error");//

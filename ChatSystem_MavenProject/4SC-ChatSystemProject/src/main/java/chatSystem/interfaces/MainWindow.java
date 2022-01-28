@@ -6,6 +6,9 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import chatSystem.controller.NetworkController;
+import chatSystem.model.State;
 import javax.swing.JSpinner;
 import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
@@ -15,6 +18,7 @@ import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.net.UnknownHostException;
 import java.awt.event.ActionEvent;
 import javax.swing.JTextField;
 import javax.swing.JPasswordField;
@@ -25,6 +29,7 @@ public class MainWindow extends JFrame {
 
 	private JPanel contentPane;
 	private final JSeparator separator = new JSeparator();
+	private NetworkController networkcontroller;
 	private JTextField textField;
 	private JPasswordField ChatSpace;
 
@@ -46,8 +51,11 @@ public class MainWindow extends JFrame {
 
 	/**
 	 * Create the frame.
+	 * @throws UnknownHostException 
 	 */
-	public MainWindow() {
+	public MainWindow(NetworkController networkcontroller) throws UnknownHostException {
+		this.networkcontroller = networkcontroller;
+		this.setTitle(networkcontroller.getPseudo());
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 681, 625);
 		contentPane = new JPanel();
@@ -134,5 +142,14 @@ public class MainWindow extends JFrame {
 		JScrollBar scrollBar = new JScrollBar();
 		scrollBar.setBounds(638, 163, 17, 61);
 		contentPane.add(scrollBar);
+		
+		//this.networkcontroller.notifyToAllUserStateUpdate(State.UNKNOWN);
+		setVisible(false);
 	}
+	
+	private void processToDisconnection() throws UnknownHostException {
+		this.networkcontroller.notifyToAllUserStateUpdate(State.DISCONNECTED);
+	}
+	
+	
 }

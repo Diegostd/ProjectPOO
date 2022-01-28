@@ -20,10 +20,10 @@ public class User implements Serializable{
 		this.username = username;
 		this.ip = ip;
 		this.phone = phone;
-		this.userState=State.CREATED;
+		//this.userState=State.CREATED;
 		//The states and the timer are not not fully implemented yet
 		//this.userState=State.DISCONNECTED;
-		//this.timer=new Timer(3000,action);
+		//this.tiser=new Timer(3000,action);
 	}
 
 	public void startTimer(){

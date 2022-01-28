@@ -73,6 +73,7 @@ public class UDPReceiver extends Thread implements Serializable{
 				
 		}
 		closeSocket();
+		System.out.println("[UDPReceiver] Socket closed for receiveng UDP messages");
 	}
 	
 		

@@ -7,16 +7,20 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import java.awt.GridBagLayout;
+import java.awt.HeadlessException;
+
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 import javax.swing.JButton;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.UnknownHostException;
+import java.util.concurrent.ConcurrentHashMap.KeySetView;
 
 import chatSystem.controller.NetworkController;
 import chatSystem.controller.UDPSender;
@@ -24,13 +28,15 @@ import chatSystem.model.State;
 import chatSystem.model.UDPMessage;
 import chatSystem.controller.UDPReceiver;
 import chatSystem.controller.*;
+import chatSystem.model.*;
 
-public class ConnexionWindow extends JFrame {
+public class ConnexionWindow extends JFrame implements ActionListener {
 
 	private JPanel contentPane;
 	private JTextField textPseudo;
-	private JTextField textMotDePasse;
-	private NetworkController ntcon;
+	private JTextField textPhone;
+	JButton btnLogin = new JButton();
+	private NetworkController networkcontroller;
 	private UDPSender udpSender;
 	private UDPReceiver udpReceiver;
 	JFrame frame = new JFrame();
@@ -56,8 +62,7 @@ public class ConnexionWindow extends JFrame {
 	 * Create the frame.
 	 */
 	public ConnexionWindow(NetworkController networkController) {
-		this.ntcon = networkController;
-		//JFrame frame = new JFrame();
+		this.networkcontroller = networkController;
 		//JFrame frame = new JFrame();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
@@ -70,7 +75,7 @@ public class ConnexionWindow extends JFrame {
 		gbl_contentPane.columnWeights = new double[]{0.0, 1.0, Double.MIN_VALUE};
 		gbl_contentPane.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		contentPane.setLayout(gbl_contentPane);
-		
+	
 		JLabel lblPseudo = new JLabel("Pseudo");
 		GridBagConstraints gbc_lblPseudo = new GridBagConstraints();
 		gbc_lblPseudo.anchor = GridBagConstraints.EAST;
@@ -88,7 +93,7 @@ public class ConnexionWindow extends JFrame {
 		contentPane.add(textPseudo, gbc_textPseudo);
 		textPseudo.setColumns(10);
 		
-		JLabel lblMotDePasse = new JLabel("Mot de passe");
+		JLabel lblMotDePasse = new JLabel("Telephone number");
 		GridBagConstraints gbc_lblMotDePasse = new GridBagConstraints();
 		gbc_lblMotDePasse.anchor = GridBagConstraints.EAST;
 		gbc_lblMotDePasse.insets = new Insets(0, 0, 5, 5);
@@ -96,14 +101,14 @@ public class ConnexionWindow extends JFrame {
 		gbc_lblMotDePasse.gridy = 1;
 		contentPane.add(lblMotDePasse, gbc_lblMotDePasse);
 		
-		textMotDePasse = new JTextField();
+		textPhone = new JTextField();
 		GridBagConstraints gbc_textMotDePasse = new GridBagConstraints();
 		gbc_textMotDePasse.insets = new Insets(0, 0, 5, 0);
 		gbc_textMotDePasse.fill = GridBagConstraints.HORIZONTAL;
 		gbc_textMotDePasse.gridx = 1;
 		gbc_textMotDePasse.gridy = 1;
-		contentPane.add(textMotDePasse, gbc_textMotDePasse);
-		textMotDePasse.setColumns(10);
+		contentPane.add(textPhone, gbc_textMotDePasse);
+		textPhone.setColumns(10);
 		
 		JLabel lblLogin = new JLabel("Login");
 		GridBagConstraints gbc_lblLogin = new GridBagConstraints();
@@ -113,28 +118,42 @@ public class ConnexionWindow extends JFrame {
 		contentPane.add(lblLogin, gbc_lblLogin);
 		
 		JButton btnLogin = new JButton("Login");
-		btnLogin.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				String textIntroduced;
-				textIntroduced = textPseudo.getText();
-		        if (!this.ntcon.isUserConnected) {
-		            JOptionPane.showMessageDialog(btnLogin, "Error in the network");
-		        }
-
-		        if (!textIntroduced.isBlank() && this.ntcon.PseudoUnicity(textIntroduced, State.CONNECTING)) {
-		            dispose();
-		            this.ntcon.setChatView();
-		        } else {
-		            JOptionPane.showMessageDialog(btnLogin, "Try again with another pseudo");
-		        }
-			}
-		});
-		
-		
+		btnLogin.addActionListener(this);
 		GridBagConstraints gbc_btnLogin = new GridBagConstraints();
 		gbc_btnLogin.gridx = 1;
 		gbc_btnLogin.gridy = 4;
 		contentPane.add(btnLogin, gbc_btnLogin);
+		setVisible(true);
 	}
 
+	@Override
+		public void actionPerformed(ActionEvent e) {
+			String textIntroduced;
+			String phoneIntroduced;
+			textIntroduced = textPseudo.getText();
+			phoneIntroduced = textPhone.getText();
+	        try {
+				if (!this.networkcontroller.isUserConnected()) {
+				    JOptionPane.showMessageDialog(btnLogin, "Error in the network");
+				}
+			} catch (HeadlessException | UnknownHostException e2) {
+				// TODO Auto-generated catch block
+				JOptionPane.showMessageDialog(btnLogin, "HeadlessException or UnkownHostException");
+				e2.printStackTrace();
+			}
+
+	        try {
+				if (!textIntroduced.isEmpty() && !phoneIntroduced.isEmpty() && this.networkcontroller.pseudoUnicity(textIntroduced, State.CONNECTING,phoneIntroduced)) {
+					new MainWindow(networkcontroller).setVisible(true);
+					//this.networkcontroller.setMainWindow();
+				    dispose();
+				} else {
+				    JOptionPane.showMessageDialog(btnLogin, "Invalid psuedo or invalid telephone, try again please");
+				}
+			} catch (HeadlessException | UnknownHostException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+	
 }

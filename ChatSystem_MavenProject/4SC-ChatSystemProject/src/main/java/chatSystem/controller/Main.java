@@ -6,6 +6,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 import chatSystem.interfaces.ConnexionWindow;
+import chatSystem.interfaces.MainWindow;
 import chatSystem.model.ModelMessages;
 import chatSystem.model.State;
 import chatSystem.model.UDPMessage;
@@ -33,7 +34,12 @@ public class Main {
 			
 			
 			//UDPReceiver th1 = new UDPReceiver(5557);
-			messagesExchanged.sendPseudo(udpm);
+			//messagesExchanged.sendPseudo(udpm);
+			javax.swing.SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+                new ConnexionWindow(messagesExchanged);
+            }
+			});
 			
 			//String broadcast = new UDPMessage(msg).withTheStatus(State.CONNECTING); Test 1
 			//messagesExchanged.notifyToAllUserStateUpdate(State.CONNECTING); Test 1
