@@ -13,30 +13,15 @@ public class User implements Serializable{
 	private InetAddress ip;
 	private String phone; //Phone of the user, ID UNIQUE
 	private State userState;
-	private Timer timer;
+	private int userPort;
 
 
 	public User(String username, InetAddress ip, String phone) {
 		this.username = username;
 		this.ip = ip;
 		this.phone = phone;
-		//this.userState=State.CREATED;
-		//The states and the timer are not not fully implemented yet
-		//this.userState=State.DISCONNECTED;
-		//this.tiser=new Timer(3000,action);
 	}
 
-	public void startTimer(){
-		this.timer.start();
-	}
-
-	public void restartTimer(){
-		this.timer.restart();
-	}
-
-	public void stopTimer(){
-		this.timer.stop();
-	}
 
 	@Override
 	public String toString()
@@ -51,7 +36,15 @@ public class User implements Serializable{
 	public String  getUserPhone() {
 		return phone;
 	}
-
+	
+	public int getUserPort() {
+		return userPort;
+	}
+	
+	public void setUserPort(int userport) {
+		this.userPort = userport;
+	}
+	
 	public void setUsername(String username) {
 		this.username = username;
 	}

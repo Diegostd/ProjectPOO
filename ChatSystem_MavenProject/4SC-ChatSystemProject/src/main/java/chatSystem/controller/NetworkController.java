@@ -1,44 +1,29 @@
 package chatSystem.controller;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
-import java.lang.reflect.Array;
-import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Timer;
-import javax.swing.DefaultListModel;
 import chatSystem.interfaces.*;
 import chatSystem.model.*;
+import chatSystem.network.UDPReceiver;
+import chatSystem.network.UDPSender;
 
-public class NetworkController implements Serializable, Cloneable{
+public class NetworkController {
 	  private UDPSender udpSender;
 	  private UDPReceiver udpReceiver;
 	  private MainWindow mainWindow = null;
 	  private Thread udprThread;
-	  private User user;
 	  private HashMap<String, ModelMessages> usersList;
 	  private String pseudo;
-	  //private String localPhone = user.getUserPhone();
-	  private String localPhone;
-	  //private Timer timerCheck;
+	  private static String localPhone;
 	  
 	  //private tcp chat; line of code for the tcp
-	  //private Network listener listener;
+	  //private NetworkforTcp listener listener;
 	  //private TCPListener tcplistener; listener of the tcp
-	  //private Chat view chatView = null;
+	  //private MainWindow programView = null;
 	  
 	  //create a global list
 	  
@@ -49,21 +34,11 @@ public class NetworkController implements Serializable, Cloneable{
 
 	  public NetworkController() throws IOException {
 		  this.usersList = new HashMap<String, ModelMessages>();
-		  User userLocal = null;
 		  this.udpSender = new UDPSender();
-		  this.user = new User(null, null, null);
 		  this.udprThread = new Thread(this.udpReceiver);
 		  this.udpReceiver = this.getListenerThread();
 		  this.udpReceiver.start();
 		  this.udprThread.start();
-			try {
-				String ph = "338119826737";
-				userLocal = new User("titi", InetAddress.getLocalHost(), ph); 
-			} catch (UnknownHostException e1) {
-				e1.printStackTrace();
-			}
-			//this.modelM = new Model(userLocal);
-			//this.cNet = new ControllerNetwork(model, interf);
 		  }
 	  
 	  public String getPseudo() {
@@ -77,14 +52,10 @@ public class NetworkController implements Serializable, Cloneable{
 	  public boolean isUserConnected() throws UnknownHostException {
 			return InetAddress.getLocalHost() != null;
 		}
-	  
-	  public void setMainWindow() {
-			this.mainWindow = new MainWindow(this).setVisible(true);
-		}
 
 	  
 	  private UDPReceiver getListenerThread() throws SocketException {
-		  int portBroadcast = 5556;
+		  int portBroadcast = 5557;
 		  return new UDPReceiver(portBroadcast, this);  
 	  }
 	  
@@ -96,7 +67,7 @@ public class NetworkController implements Serializable, Cloneable{
 	
 	public void notifyToAllUserStateUpdate(State state) throws UnknownHostException {
 		System.out.println("[NetworkController notify] Type of broadcast: " + state);
-		User usr = new User (this.pseudo,InetAddress.getLocalHost(),this.localPhone);
+		User usr = new User (this.pseudo,InetAddress.getLocalHost(),NetworkController.getLocalPhone());
 		String broadcast = new UDPMessage(usr).withTheStatus(state).serializeMessage();
 		udpSender.sendMessageBroadcastUDP(broadcast);
 	}
@@ -119,9 +90,10 @@ public class NetworkController implements Serializable, Cloneable{
 		return null;
 	}
 	
+	
 	public void toUpdateOrAddUser(String userPhone, String newPseudo, String address) throws IOException {
 		
-		if (userPhone.equals(localPhone)) {
+		if (userPhone.equals(getLocalPhone())) {
 			System.out.println("SAME TELEPHONE" + usersList);//test
 			return;
 		}
@@ -176,16 +148,11 @@ public class NetworkController implements Serializable, Cloneable{
 			udpSender.send_MessageUDP(pseudoMSG, message.getSourceAddress());
 		}
 		
-		
-		private InetAddress getIp() {
-			// TODO Auto-generated method stub
-			return null;
-		}
 
 		public boolean pseudoUnicity(String pseudo, State state, String phone) throws UnknownHostException {
 			if (!this.getAllConnectedUsers().containsKey(pseudo)) {
 				this.pseudo = pseudo;
-				this.localPhone = phone;
+				NetworkController.setLocalPhone(phone);
 				this.notifyToAllUserStateUpdate(state);
 				return true;
 			} else {
@@ -224,6 +191,14 @@ public class NetworkController implements Serializable, Cloneable{
 				this.toUpdateOrAddUser(phone, pseudo, address);
 			}	
 			
+		}
+
+		public static String getLocalPhone() {
+			return localPhone;
+		}
+
+		public static void setLocalPhone(String localPhone) {
+			NetworkController.localPhone = localPhone;
 		}
 	
 

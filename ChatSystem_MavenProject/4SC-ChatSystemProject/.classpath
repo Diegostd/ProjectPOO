@@ -36,5 +36,7 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="C:/Users/lessp/.p2/pool/plugins/org.eclipse.swt.win32.win32.x86_64_3.117.0.v20210906-0842.jar" sourcepath="C:/Users/lessp/.p2/pool/plugins/org.eclipse.swt.win32.win32.x86_64_3.117.0.v20210906-0842.jar"/>
+	<classpathentry kind="lib" path="C:/Users/lessp/OneDrive/Escritorio/ProjectPOO-master/jar_files/mysql-connector-java-8.0.26.jar"/>
+	<classpathentry kind="lib" path="C:/Users/lessp/OneDrive/Escritorio/ProjectPOO-master/jar_files/protobuf-java-3.11.4.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

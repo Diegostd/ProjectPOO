@@ -34,22 +34,6 @@ public class MainWindow extends JFrame {
 	private JPasswordField ChatSpace;
 
 	/**
-	 * Launch the application.
-	 */
-	/*public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					MainWindow frame = new MainWindow();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}*/
-
-	/**
 	 * Create the frame.
 	 * @throws UnknownHostException 
 	 */
@@ -143,7 +127,7 @@ public class MainWindow extends JFrame {
 		scrollBar.setBounds(638, 163, 17, 61);
 		contentPane.add(scrollBar);
 		
-		//this.networkcontroller.notifyToAllUserStateUpdate(State.UNKNOWN);
+		//this.networkcontroller.notifyToAllUserStateUpdate(State.UNKNOWN); //test
 		setVisible(false);
 	}
 	

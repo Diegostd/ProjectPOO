@@ -20,18 +20,14 @@ public class UDPMessage implements Serializable{
 	private InetAddress sourceAddress;
 	private User user;
 	
-	//Il faut changer 
 	public UDPMessage(User user) throws UnknownHostException {
 		// TODO Auto-generated constructor stub
-		//Se puede quitar el inetaddress
 		InetAddress localHost = user.getIp();
 		this.userPseudo = user.getUsername();
 		this.userPhone = user.getUserPhone();
 		this.user = user;
-		//this.userPhone = "7894561231";
-		//this.sourceAddress = user.getIp();
 		this.sourceAddress = localHost;
-		//When the connection begins, timer of the pseudo
+		//When the connection begins, it commences the timer of the pseudo
 		Timestamp timestartOfConnection = new Timestamp(System.currentTimeMillis());
 		this.timer = timestartOfConnection;
 		this.status = user.getState();
@@ -54,11 +50,6 @@ public class UDPMessage implements Serializable{
 		return this.status;
 	}
 
-	/*public UDPMessage getSourceAddress(InetAddress srcAddress) {
-		this.sourceAddress = srcAddress;
-		return this;
-	}*/
-
 	public InetAddress getSourceAddress() {
 		return this.sourceAddress;
 	}
@@ -79,6 +70,11 @@ public class UDPMessage implements Serializable{
 		return this.userPhone;
 	}
 	
+	public UDPMessage setSourceAddress(InetAddress srcAddress) {
+		this.sourceAddress = srcAddress;
+		return this;
+	}
+	
 	public UDPMessage withTheStatus(State state) {
 		this.status = state;
 		return this;
@@ -96,12 +92,10 @@ public class UDPMessage implements Serializable{
 			String[] split = str.split("@"); //test	
 			String s = Stream.of(split).collect(Collectors.joining("@"));
 			for (int i = 0; i<split.length; i++) {//test
-				 System.out.println(split[i]);//test
+				 System.out.println("[UDPMessage], serialize message: "+i+" " + split[i]);//test
 			}//test
-			System.out.println("[UDPMessage, serialize] Array splited: "+split);//test
-			System.out.println("[UDPMessage, serialize] Array joined again: "+s);//test
+			System.out.println("[UDPMessage, serialize] String sended: "+s);//test
 			//inserer code pour creer le contenu de notre objet msg
-		    //byte[] listData = out.toByteArray();
 			return s;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -111,14 +105,10 @@ public class UDPMessage implements Serializable{
 
 	public static UDPMessage deserializeMessage(String text) {
 		try {
-			/*byte bytes[] = text.getBytes();
-			ObjectInputStream inputStream = new ObjectInputStream(new ByteArrayInputStream(bytes));//test
-			String msg = (String)inputStream.readObject();*/
 			String[] split = text.split("@");
 			for (int i = 0; i<split.length; i++) {//test
-				 System.out.println(split[i]);//test
+				System.out.println("[UDPMessage], deserialized message: "+i+" " + split[i]);//test
 			}//test
-			//System.out.println("[UDPMessage, deserialized msg to send: "+text);//test
 			String state =split[0];//test
 			String pseudo = split[1];
 			String phone = split[2];
@@ -130,7 +120,7 @@ public class UDPMessage implements Serializable{
 			return aReturner;//test*/	
 		} catch (Exception e) {
 			e.printStackTrace();
-			System.out.println("[UDPMessage error");//
+			System.out.println("[UDPMessage error]");//
 			return new UDPMessage();
 		}
 	}

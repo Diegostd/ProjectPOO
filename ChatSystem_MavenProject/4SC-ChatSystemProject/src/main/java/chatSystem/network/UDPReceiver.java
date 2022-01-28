@@ -1,4 +1,4 @@
-package chatSystem.controller;
+package chatSystem.network;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -12,6 +12,7 @@ import java.net.SocketTimeoutException;
 
 import javax.swing.event.EventListenerList;
 
+import chatSystem.controller.NetworkController;
 import chatSystem.model.*;
 
 
@@ -65,8 +66,12 @@ public class UDPReceiver extends Thread implements Serializable{
 				//State state = State.CONNECTING;
 				//udpMessage.withTheStatus();
 				System.out.println("[UDPReceiver] Message received : " + text);
-				if(!udpMessage.getUserPhone().equals("7894561232")) {
+				if(!udpMessage.getUserPhone().equals(NetworkController.getLocalPhone())) {
+					System.out.println("[UDPReceiver] Telephone different");
 					this.messageExchanged.newReceivedBroadcastMessage(udpMessage);
+				}
+				else {
+					System.out.println("[UDPReceiver] Same ID, same telephone");
 				}
 			} catch (SocketTimeoutException e) {	
 			}

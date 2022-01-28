@@ -1,8 +1,5 @@
 package chatSystem.interfaces;
 
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -12,23 +9,18 @@ import java.awt.HeadlessException;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
+import java.awt.Container;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import javax.swing.JTextField;
-import javax.swing.SwingUtilities;
+import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.UnknownHostException;
-import java.util.concurrent.ConcurrentHashMap.KeySetView;
 
-import chatSystem.controller.NetworkController;
-import chatSystem.controller.UDPSender;
 import chatSystem.model.State;
-import chatSystem.model.UDPMessage;
-import chatSystem.controller.UDPReceiver;
 import chatSystem.controller.*;
-import chatSystem.model.*;
 
 public class ConnexionWindow extends JFrame implements ActionListener {
 
@@ -37,33 +29,17 @@ public class ConnexionWindow extends JFrame implements ActionListener {
 	private JTextField textPhone;
 	JButton btnLogin = new JButton();
 	private NetworkController networkcontroller;
-	private UDPSender udpSender;
-	private UDPReceiver udpReceiver;
 	JFrame frame = new JFrame();
 	
 
-	/**
-	 * Launch the application.
-	 */
-	/*public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					ConnexionWindow frame = new ConnexionWindow();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	} */
 
 	/**
 	 * Create the frame.
 	 */
 	public ConnexionWindow(NetworkController networkController) {
 		this.networkcontroller = networkController;
-		//JFrame frame = new JFrame();
+		
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -74,8 +50,8 @@ public class ConnexionWindow extends JFrame implements ActionListener {
 		gbl_contentPane.rowHeights = new int[]{0, 0, 0, 0, 0, 0};
 		gbl_contentPane.columnWeights = new double[]{0.0, 1.0, Double.MIN_VALUE};
 		gbl_contentPane.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
-		contentPane.setLayout(gbl_contentPane);
-	
+		contentPane.setLayout(gbl_contentPane);    
+			
 		JLabel lblPseudo = new JLabel("Pseudo");
 		GridBagConstraints gbc_lblPseudo = new GridBagConstraints();
 		gbc_lblPseudo.anchor = GridBagConstraints.EAST;
@@ -110,13 +86,6 @@ public class ConnexionWindow extends JFrame implements ActionListener {
 		contentPane.add(textPhone, gbc_textMotDePasse);
 		textPhone.setColumns(10);
 		
-		JLabel lblLogin = new JLabel("Login");
-		GridBagConstraints gbc_lblLogin = new GridBagConstraints();
-		gbc_lblLogin.insets = new Insets(0, 0, 5, 0);
-		gbc_lblLogin.gridx = 1;
-		gbc_lblLogin.gridy = 3;
-		contentPane.add(lblLogin, gbc_lblLogin);
-		
 		JButton btnLogin = new JButton("Login");
 		btnLogin.addActionListener(this);
 		GridBagConstraints gbc_btnLogin = new GridBagConstraints();
@@ -124,6 +93,8 @@ public class ConnexionWindow extends JFrame implements ActionListener {
 		gbc_btnLogin.gridy = 4;
 		contentPane.add(btnLogin, gbc_btnLogin);
 		setVisible(true);
+		
+		
 	}
 
 	@Override
