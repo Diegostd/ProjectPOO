@@ -15,8 +15,8 @@ Afin d'ouvrir le projet, les points suivants doivent être respectés :
 - Avoir  installées les librairies requises, qui sont essentiellement utilisées par SWING pour la section graphique et des librairies supplémentaires pour la connexion à la base de données MySQL.
 - Utiliser la bibliothèque JavaSE en version 1.8 sur le project.
 - Pour accéder à la base de données centrale, il vous faudra être connecté au VPN de l'INSA et saisir les lignes de commandes suivantes : 
-                mysql -h srv-bdens -P 3306 -u tp_servlet_012 -p 
-                Puis saisissez le mot de passe : Thi0zaes
+                ``` mysql -h srv-bdens -P 3306 -u tp_servlet_012 -p ```
+                puis saisissez le mot de passe :  ``` Thi0zaes ```
 
 
 ## Pour lancer l'application
