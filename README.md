@@ -16,7 +16,7 @@ Afin d'ouvrir le projet, les points suivants doivent être respectés :
 - Utiliser la bibliothèque JavaSE en version 1.8 sur le project.
 - Pour accéder à la base de données centrale, il vous faudra être connecté au VPN de l'INSA et saisir les lignes de commandes suivantes : 
                 ``` mysql -h srv-bdens -P 3306 -u tp_servlet_012 -p ```
-                Puis saisissez le mot de passe :  ``` Thi0zaes ```
+                puis saisissez le mot de passe :  ``` Thi0zaes ```
 
 
 ## Pour lancer l'application
