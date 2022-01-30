@@ -3,6 +3,7 @@ package chatSystem.network;
 import chatSystem.database.*;
 
 import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -10,6 +11,7 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -34,28 +36,32 @@ public class TCPclient extends Thread {
 	
 	private Horodator clock = new Horodator(); 
 	private Socket socketCli;
+	private DataOutputStream dous;
     private Scanner scanner;
 	
-	public TCPclient(InetAddress serverAddress, int serverPort) throws Exception {	
-		System.out.println ("heho"); 
-		this.socketCli = new Socket(serverAddress, serverPort); 
+	public TCPclient(String hostPseudo, int serverPort, String myPhone,String pseudo, String address) throws Exception {	
+		System.out.println ("[TCP Client] Connection of the TCPClient");
+		this.socketCli = new Socket(hostPseudo, serverPort); 
 		//une fois le serveur lancé, si je remplace serverAddress par l'InetAddress du serveur et serverPort par le numéro de port du serveur ca fait un échec de connexion 
-		System.out.println("Le port d'écoute est actif sur la machine  " + socketCli.getLocalAddress() +" n° de port: " + socketCli.getPort() ); 
+		System.out.println("Le port d'écoute est actif sur la machine  " + socketCli.getLocalAddress() +" n° de port: " + socketCli.getPort() );
+		this.dous = new DataOutputStream(socketCli.getOutputStream());
+        this.send_TCPMessage(myPhone);
+        this.send_TCPMessage(pseudo);
+        this.send_TCPMessage(address);
         this.scanner = new Scanner(System.in);
 	}
 	
 
-	 public void run() {
-		   String input;
-	     
-	    	   do {
+	 public void sendMesaggeAndSaveToDatabase(String message, String myPhone, String yourPhone) {
+		   //String input;
+	    	  /* do {
 	        	System.out.println("Enter text: ");
 	            input = scanner.nextLine();
-	            PrintWriter out;
+	            PrintWriter out;*/
 	            
 				try {
-					out = new PrintWriter(this.socketCli.getOutputStream(), true);
-					out.println(input);
+					PrintWriter out = new PrintWriter(this.socketCli.getOutputStream(), true);
+					out.println(message);
 		            out.flush();
 		            
 		            //horodatage 
@@ -66,77 +72,42 @@ public class TCPclient extends Thread {
 	                MysqlCon mysqlObj = new MysqlCon(); 
 	                //mysqlObj.addHistoryLine(con,clientMe.getID(),receiver.getID(), input, msgDate);	   
 	                
-	                mysqlObj.addHistoryLine(con,"me","you", input, msgDate);
+	                mysqlObj.addHistoryLine(con,myPhone,yourPhone, message, msgDate);
 	              
 			            
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
-				}	}  
+				}	//}  
 				
-				while (!input.equals("bye"));	          
-	          
-	            InputStream input1;
-				try {
-					input1 = socketCli.getInputStream();
-					BufferedReader reader1 = new BufferedReader(new InputStreamReader(input1)); //définition d'un nouveau buffer d'écoute sur le flux entrant
-	                String time = reader1.readLine();
-	                System.out.println(time);           
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				  try {
-					socketCli.close();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} 
-	                 
+				//while (!message.equals("bye"));	          
+	            
 	       }
 	       
-	    
-
-	public static void main(String[] args) { 
-        
-		 	TCPclient client;
-			try {
-				client = new TCPclient(
-				        InetAddress.getLocalHost(),8080);
-				System.out.println("\r\nConnected to Server: " + client.socketCli.getInetAddress());
-		        client.start();
-			} catch (NumberFormatException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (UnknownHostException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-	       	        
+	 public boolean send_TCPMessage(String message) {
+	        try {
+	            dous.writeUTF(message);
+	            dous.flush();
+	            return true;
+	        } catch (SocketException e) {
+	            return false;
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	            return false;
+	        }
+	    }
+	 
+	 public void closeTCPSocket() {
+	        try {
+	        	dous.close();
+		        socketCli.close();
+	            System.out.println("Socket of the connection TCP is closed");
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	            System.out.println("Error while closing the TCP Socket");
+	        }
+	    }
 	
 	}
 
 
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-
-}

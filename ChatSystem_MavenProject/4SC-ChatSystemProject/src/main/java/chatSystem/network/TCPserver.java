@@ -2,8 +2,12 @@ package chatSystem.network;
 
 import java.io.*;
 import java.net.*;
+import java.util.ArrayList;
 
+import chatSystem.controller.NetworkController;
 import chatSystem.model.LocalUser;
+import chatSystem.model.User;
+
 
 //multi-threaded  version 
 //à décliner pour un échange entre 2 agents sur des postes différents
@@ -12,75 +16,51 @@ import chatSystem.model.LocalUser;
 
 public class TCPserver extends Thread{
      
-	private LocalUser serverAgent = new LocalUser();
+	private int timeout = 1500;
+	private boolean running;
+	private User serverAgent = new User(null, null, null);
 	private ServerSocket serverSock ; 
+	private ArrayList<TCPThreads> threads;
+	private NetworkController networkController;
 	
 	
 	//getter et setter 
-		public LocalUser getServerAgent() {
+		public User getServerAgent() {
 			return serverAgent;
 		}
 
-		public void setServerAgent(LocalUser serverAgent) {
+		public void setServerAgent(User serverAgent) {
 			this.serverAgent = serverAgent;
 		}
 	
 	
 	 //constructeur : permet d'initaliser le socket d'écoute en prenant en paramètre l'@ IP de l'agent 
-	public TCPserver(String ipAddress, int port) throws Exception {
+	public TCPserver(int port, NetworkController ntwController) throws Exception {
 		// TODO Auto-generated constructor stub
-		if (ipAddress != null && !ipAddress.isEmpty()) 
-	          this.serverSock = new ServerSocket(port, 1, InetAddress.getByName(ipAddress));
-	        else 
-	          this.serverSock = new ServerSocket(port, 1, InetAddress.getLocalHost());
+		this.networkController = ntwController;
+	    this.threads = new ArrayList<TCPThreads>();
+		this.serverSock = new ServerSocket(port);
 		
-		System.out.println("Le port d'ecoute est actif sur la machine  " + serverSock); 
+		//System.out.println("\n[TCPServer] The listening port is active on the machine" + serverSock); 
 		
 		//mise à jour de l'@IP et du numéro de port du serveur 
-		serverAgent.setIP(serverSock.getInetAddress());
-		serverAgent.setPort(serverSock.getLocalPort());
-		System.out.println("Le port d'écoute est actif sur la machine  " + serverAgent.getIP() +" n° de port: " + serverAgent.getPort() ); 
+		serverAgent.setIp(serverSock.getInetAddress());
+		serverAgent.setUserPort(serverSock.getLocalPort());
+		System.out.println("The listening port is active on the machine  " + InetAddress.getLocalHost() +" n° de port: " + serverAgent.getUserPort() ); 
 	}
 	
 	
 	 //écoute et affichage des messages reçus 
 	 
 	public void run() {
-		 while (true) {
-			 System.out.println("heo"); 
-	        String data = null;
-	        Socket client;
-			try {
-				client = this.serverSock.accept();
-				  String clientAddress = client.getInetAddress().getHostAddress();
-			        System.out.println("\r\nNew connection from " + clientAddress);
-			       do {
-			       BufferedReader in = new BufferedReader(
-			       new InputStreamReader(client.getInputStream()));        
-			        while ( (data = in.readLine()) != "bye" ) {
-			            System.out.println("\r\nMessage from " + clientAddress + ": " + data);
-			        }
-			       }while (!data.equals("bye"));
-			    	   
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-	      
-	    }
+		try {
+            listenerOfTCP();
+        } catch (Exception e) {
+        	System.out.println("Error, exception");
+            e.printStackTrace();
+        }
 	 }
 
-	//affiche les infos d'établissement de connexion 
-	/*@SuppressWarnings("unused")
-	private void connexInfo (TCPserver app) {
-		
-		 System.out.println("\r\nRunning Server: " + 
-	                "Host=" + app.getSocketAddress().getHostAddress() + 
-	                " Port=" + app.getPort());
-	}*/
-	
-	
-	
 	private String getPort() {
 		// TODO Auto-generated method stub
 		return null;
@@ -90,22 +70,39 @@ public class TCPserver extends Thread{
 		// TODO Auto-generated method stub
 		return null;
 	}
-
 	
+	
+	private void listenerOfTCP() throws IOException {
+		System.out.println("[TCPServer] TCP listener is working");
+		running = true;
+		while (!running) {
 
-	public static void main(String[] args) {
-		try {
-			TCPserver app = new TCPserver("192.168.56.1",8080);  //10.1.5.28
-			app.start(); 
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}	
+	        Socket client;
+	        serverSock.setSoTimeout(timeout);
+			try {
+				client = this.serverSock.accept();
+				  String clientAddress = client.getInetAddress().getHostAddress();
+			        System.out.println("\r\nNew connection from " + clientAddress);
+			        TCPThreads th = new TCPThreads(client, this.networkController);
+			        th.start();
+	                threads.add(th);
+			} catch (SocketTimeoutException e) {
+				// TODO Auto-generated catch block
+				System.out.println("[TCPServer] Timeout exception");
+				e.printStackTrace();
+			}
+	      
+	    }
 		
+		 for (TCPThreads th : threads) {
+	            if (th.isAlive()) {
+	                th.setRunning(running);
+	                while (th.isAlive());
+	            }
 	}
-
+		 serverSock.close();
+}
 	
 }
-
 //constructeur + création socket 
-//à partir de la liste des utilisateurs, récupérer son adresse IP 
+//à partir de connexion, récupérer son adresse IP 

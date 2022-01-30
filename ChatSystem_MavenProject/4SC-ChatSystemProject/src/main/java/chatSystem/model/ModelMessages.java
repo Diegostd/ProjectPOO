@@ -22,11 +22,11 @@ public class ModelMessages {
 		this.address = address;
 	}
 	
-	public String getMessagePseudo() {
+	public String getUserPseudo() {
 		return pseudo;
 	}
 	
-	public String getMessageIp() {
+	public String getUserIp() {
 		return address;
 	}
 	

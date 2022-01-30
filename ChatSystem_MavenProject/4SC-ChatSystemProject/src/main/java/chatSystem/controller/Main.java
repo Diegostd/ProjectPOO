@@ -15,7 +15,7 @@ import chatSystem.network.UDPSender;
 
 public class Main {
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws Exception {
 		// TODO Auto-generated method stub
 			final NetworkController messagesExchanged = new NetworkController();
 			
