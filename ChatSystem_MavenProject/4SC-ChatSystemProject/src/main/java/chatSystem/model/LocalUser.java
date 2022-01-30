@@ -1,4 +1,4 @@
-package chatSystem.model;
+package ChatSystem.model;
 import java.awt.event.ActionListener;
 import java.net.InetAddress; 
 
