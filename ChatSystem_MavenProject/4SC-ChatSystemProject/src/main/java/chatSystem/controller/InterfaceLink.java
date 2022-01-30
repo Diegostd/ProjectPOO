@@ -3,18 +3,18 @@ import chatSystem.interfaces.*;
 
 
 public class InterfaceLink {
-	 private String preuve;
-	  private String motdepassepreuve;
+	 private String pseudo;
+	 private String motdepassepreuve;
 
 
 	public InterfaceLink() {
 		// TODO Auto-generated constructor stub
-		 this.preuve="toto";
+		 this.pseudo="toto";
 		  this.motdepassepreuve= "toto";
 	}
 
 	public boolean testPseudo (String pseudo){
-		if (pseudo.equals(preuve)&&pseudo.equals(motdepassepreuve)) {
+		if (pseudo.equals(pseudo)&&pseudo.equals(motdepassepreuve)) {
 			return true;
 			
 		}

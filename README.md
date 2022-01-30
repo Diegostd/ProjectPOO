@@ -1,6 +1,6 @@
 # ProjectPOO
-Diego-Vatosoa-Agathe - 4SC 
+Diego LOPEZ - Vatosoa RAZAFINIARY - 4SC
 
+Organisation des documents :
 
-Organisation des documents : 
-- tous les fichiers/répertoires relatifs au projet sont bien sur cette branche, bienvenu ! 
+Veuillez basculer sur la **"branche diego"** pour accéder à tous les fichiers/répertoires et rendus relatifs au projet. 

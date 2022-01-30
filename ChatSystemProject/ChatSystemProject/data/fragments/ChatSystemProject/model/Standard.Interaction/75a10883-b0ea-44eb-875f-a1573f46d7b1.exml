@@ -145,13 +145,13 @@
           <DEPENDENCIES>
             <COMP relation="SentMessage">
               <OBJECT>
-                <ID name="InterfaceToCom::EnvoyerMsgAllUsers()" mc="Standard.Message" uid="6fd330bf-b280-4f2a-8270-ad4a88f0c32d"/>
+                <ID name="InterfaceToCom::EnvoyerMsgAllConnectedUsers()" mc="Standard.Message" uid="6fd330bf-b280-4f2a-8270-ad4a88f0c32d"/>
                 <ATTRIBUTES>
                   <ATT name="Argument"></ATT>
                   <ATT name="KindOfMessage">CompleteKind</ATT>
                   <ATT name="SortOfMessage">SyncCall</ATT>
                   <ATT name="Sequence"><![CDATA[2]]></ATT>
-                  <ATT name="Name"><![CDATA[InterfaceToCom::EnvoyerMsgAllUsers()]]></ATT>
+                  <ATT name="Name"><![CDATA[InterfaceToCom::EnvoyerMsgAllConnectedUsers()]]></ATT>
                   <ATT name="status">1970354901745664</ATT>
                 </ATTRIBUTES>
                 <DEPENDENCIES>

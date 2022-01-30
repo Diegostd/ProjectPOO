@@ -54,12 +54,14 @@ public class TCPserver extends Thread{
 				client = this.serverSock.accept();
 				  String clientAddress = client.getInetAddress().getHostAddress();
 			        System.out.println("\r\nNew connection from " + clientAddress);
-			        
-			        BufferedReader in = new BufferedReader(
-			                new InputStreamReader(client.getInputStream()));        
-			        while ( (data = in.readLine()) != null ) {
+			       do {
+			       BufferedReader in = new BufferedReader(
+			       new InputStreamReader(client.getInputStream()));        
+			        while ( (data = in.readLine()) != "bye" ) {
 			            System.out.println("\r\nMessage from " + clientAddress + ": " + data);
 			        }
+			       }while (!data.equals("bye"));
+			    	   
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

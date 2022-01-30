@@ -12,8 +12,8 @@ import chatSystem.interfaces.*;
 public class NetworkController {
 	  private String preuve; //pseudo valide ? 
 	  private String motdepassepreuve;
-	  private UDPSender udpSender;
-	  private UdpReceiver udpReceiver;
+	  private UDPclient udpSender;
+	  private UDPserver udpReceiver;
 
 	  public NetworkController() {
 		  this.preuve="toto";
@@ -36,14 +36,14 @@ public class NetworkController {
 	//@Test
 	public void NewUserBroadcast(String newPseudo) {
 		// analyze the package that the controller sent
-		udpSender = new UDPSender();
+		/*udpSender = new UDPSender();
 		udpReceiver = new UdpReceiver();
 		udpSender.sendPseudosBroadcast(newPseudo); 				
 		udpReceiver.ReceiveMessage();
 		
 		udpReceiver.setStopThread(true);
 		udpSender.closeSocket();
-		udpReceiver.closeSocket(); 
+		udpReceiver.closeSocket(); */
 		
 		
 		 // Création et lancement du timer	

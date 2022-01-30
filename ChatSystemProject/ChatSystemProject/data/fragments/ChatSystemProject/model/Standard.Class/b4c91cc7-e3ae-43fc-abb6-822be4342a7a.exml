@@ -31,7 +31,7 @@
           <DEPENDENCIES></DEPENDENCIES>
         </OBJECT>
         <OBJECT>
-          <ID name="Interface" mc="Standard.Operation" uid="5e363f07-99dd-444d-87d3-8d87dcea3fc3"/>
+          <ID name="ConnexionWindow" mc="Standard.Operation" uid="5e363f07-99dd-444d-87d3-8d87dcea3fc3"/>
           <ATTRIBUTES>
             <ATT name="Concurrency">false</ATT>
             <ATT name="Final">false</ATT>
@@ -39,13 +39,13 @@
             <ATT name="Visibility">Public</ATT>
             <ATT name="IsClass">false</ATT>
             <ATT name="IsAbstract">false</ATT>
-            <ATT name="Name"><![CDATA[Interface]]></ATT>
+            <ATT name="Name"><![CDATA[ConnexionWindow]]></ATT>
             <ATT name="status">1970354901745664</ATT>
           </ATTRIBUTES>
           <DEPENDENCIES></DEPENDENCIES>
         </OBJECT>
         <OBJECT>
-          <ID name="WindowChat" mc="Standard.Operation" uid="b4317a2d-0bfe-4094-9b71-93209b24145b"/>
+          <ID name="MainWindowChat" mc="Standard.Operation" uid="b4317a2d-0bfe-4094-9b71-93209b24145b"/>
           <ATTRIBUTES>
             <ATT name="Concurrency">false</ATT>
             <ATT name="Final">false</ATT>
@@ -53,7 +53,7 @@
             <ATT name="Visibility">Public</ATT>
             <ATT name="IsClass">false</ATT>
             <ATT name="IsAbstract">false</ATT>
-            <ATT name="Name"><![CDATA[WindowChat]]></ATT>
+            <ATT name="Name"><![CDATA[MainWindowChat]]></ATT>
             <ATT name="status">1970354901745664</ATT>
           </ATTRIBUTES>
           <DEPENDENCIES></DEPENDENCIES>
@@ -154,7 +154,7 @@
           </ATTRIBUTES>
           <DEPENDENCIES>
             <LINK relation="Target">
-              <ID name="Interface" mc="Standard.Class" uid="6e2d902a-d8e0-48a2-9f6b-efb40a82f455"/>
+              <ID name="ConnexionWindow" mc="Standard.Class" uid="6e2d902a-d8e0-48a2-9f6b-efb40a82f455"/>
             </LINK>
             <COMP relation="Opposite">
               <OBJECT>
@@ -215,7 +215,7 @@
           </ATTRIBUTES>
           <DEPENDENCIES>
             <LINK relation="Target">
-              <ID name="Window Chat" mc="Standard.Class" uid="463b3cdf-ef4c-4c74-9d03-578a0af5d67e"/>
+              <ID name="MainWindowChat" mc="Standard.Class" uid="463b3cdf-ef4c-4c74-9d03-578a0af5d67e"/>
             </LINK>
             <COMP relation="Opposite">
               <OBJECT>
